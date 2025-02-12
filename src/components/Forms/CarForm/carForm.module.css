@@ -1,0 +1,61 @@
+.container {
+    @apply flex items-center justify-center min-h-screen;
+}
+
+.resizableWrapper {
+    @apply w-full max-w-4xl h-auto max-h-[calc(100vh-120px)] overflow-auto border-2 border-gray-300 rounded-lg p-5 box-border resize;
+    margin: 60px;
+}
+
+@screen sm {
+    .resizableWrapper {
+        @apply max-w-sm;
+    }
+}
+
+@screen md {
+    .resizableWrapper {
+        @apply max-w-md;
+    }
+}
+
+@screen lg {
+    .resizableWrapper {
+        @apply max-w-lg;
+    }
+}
+
+@screen xl {
+    .resizableWrapper {
+        @apply max-w-xl;
+    }
+}
+
+.resizer {
+    @apply absolute bottom-0 right-0 w-2.5 h-2.5 cursor-nwse-resize bg-gray-300;
+}
+
+.form {
+    @apply flex flex-col gap-2.5 w-full box-border;
+}
+
+.formGroup {
+    @apply flex flex-col gap-1;
+}
+
+.error {
+    @apply text-red-600 text-xs;
+}
+
+.buttonGroup {
+    @apply flex justify-center gap-2.5;
+}
+
+
+
+
+
+
+
+
+
