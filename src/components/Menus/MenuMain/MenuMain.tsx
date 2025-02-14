@@ -15,6 +15,7 @@ export const MenuMain = () => {
     const menuItems: IMenuItem[] = [
         {path: "/", label: "Home", disabled: false},
         {path: "/cars", label: "Cars"},
+        {path: "/users", label: "Users"},
         {path: "/api/auth", label: "Auth", disabled: status === "authenticated"},
         {
             path: "#",

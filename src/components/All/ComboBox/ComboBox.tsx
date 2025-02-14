@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import { useState } from "react";
+import {FC, useState} from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { cn } from "@/lib/utils.ts";
 import {
@@ -19,7 +19,7 @@ export interface ComboBoxProps {
   label?: string;
 }
 
-const ComboBox: React.FC<ComboBoxProps> = ({ items = [], onSelect, label = "Select ..." }) => {
+const ComboBox: FC<ComboBoxProps> = ({ items = [], onSelect, label = "Select ..." }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 

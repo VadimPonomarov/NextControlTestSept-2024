@@ -16,7 +16,7 @@ const UsersComboBox: FC<IProps> = ({reset}) => {
     const [users, setUsers] = useState<IItem[]>([]);
     const {data} = useQuery<IUsersResponse>({
         queryKey: ["users"],
-        queryFn: async () => await apiUsers.users(),
+        queryFn: async () => await apiUsers.usersAll(),
         staleTime: Infinity,
     });
 
