@@ -67,7 +67,7 @@
         @apply bg-background text-foreground;
 
         .theme-switch {
-            @apply fixed right-0 top-0 m-2 h-6 w-6 rounded-full p-2;
+            @apply fixed right-2 top-[2px] m-2 h-6 w-6 rounded-full p-2;
         }
     }
 

@@ -17,7 +17,6 @@ const FormFieldsRenderer = <T,>({ fields, register, errors, item }: FormFieldsRe
                     register={register}
                     errors={errors}
                     type={field.type}
-                    disabled={field.disabled}
                 />
             );
         })}

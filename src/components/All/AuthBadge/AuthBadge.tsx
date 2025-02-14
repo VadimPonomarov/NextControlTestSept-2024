@@ -1,21 +1,30 @@
-"use client"
-import React from 'react';
-import {useSession} from "next-auth/react";
-import {Badge} from "@/components/ui/badge.tsx";
+"use client";
+import { useSession } from "next-auth/react";
+import { Badge } from "@/components/ui/badge.tsx";
 import Link from "next/link";
+import { IUserSession } from "@/common/interfaces/users.interfaces.ts";
 
-const AuthBadge = () => {
-    const session = useSession()
-    return (
-        <>
-            {session.status === "authenticated" &&
-                <Badge variant={"destructive"}>
-                    <Link href={"/profile"}>
-                        {session.data.user.email}
-                    </Link>
-                </Badge>}
-        </>
-    );
+const AuthBadge: React.FC = () => {
+    const { data: session, status } = useSession();
+    const user = session?.user as IUserSession | undefined;
+
+    if (status === "loading") {
+        return null;
+    }
+
+    if (status === "authenticated" && user) {
+        return (
+            <Badge variant={"destructive"}>
+                <Link href={"/profile"}>
+                    {user.firstName}
+                </Link>
+            </Badge>
+        );
+    }
+
+    return null;
 };
 
 export default AuthBadge;
+
+

@@ -9,8 +9,7 @@ export const MenuMain = () => {
     const {status} = useSession();
 
     const handleSignOut = () => {
-        const currentUrl = window.location.href;
-        signOut({callbackUrl: currentUrl});
+        signOut({callbackUrl: "/"});
     };
 
     const menuItems: IMenuItem[] = [
@@ -18,13 +17,14 @@ export const MenuMain = () => {
         {path: "/cars", label: "Cars"},
         {path: "/api/auth", label: "Auth", disabled: status === "authenticated"},
         {
-            path: "#", // Используем '#' для ссылки, если используется коллбэк
-            label: <FaSignOutAlt size={24}/>, // Используем иконку вместо строки
+            path: "#",
+            label: <FaSignOutAlt size={18}/>,
             disabled: status !== "authenticated",
-            cb: handleSignOut
+            cb: handleSignOut,
         },
     ];
 
     return <MenuComponent items={menuItems} className={"fixed top-0 left-0"}/>;
 };
+
 

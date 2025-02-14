@@ -7,17 +7,17 @@ import FormFieldsRenderer from "@/components/All/FormFieldsRenderer/FormFieldsRe
 import {Button} from "@/components/ui/button";
 import {schema} from "@/components/Forms/CarForm/index.joi.ts";
 import {ICar} from "@/common/interfaces/cars.interfaces";
-import {FormFieldsConfig} from "@/components/All/FormField";
 import {useIndexForm} from "@/components/Forms/CarForm/useIndexForm.tsx";
 import ButtonGroup from "@/components/All/ButtonGroup/ButtonGroup.tsx";
 import {PencilSquareIcon, PlusCircleIcon} from "@heroicons/react/24/solid";
 import {ArrowPathIcon} from "@heroicons/react/16/solid";
+import {FormFieldsConfig} from "@/common/interfaces/forms.interfaces.ts";
 
 import css from "./index.module.css";
 
 const formFields: FormFieldsConfig<ICar> = [
     {name: "id", label: "ID", type: "number", condition: (car: ICar | null) => !!car?.id, disabled: true},
-    {name: "brand", label: "Brand"},
+    {name: "brand", label: "Brand", type: "text"},
     {name: "price", label: "Price", type: "number"},
     {name: "year", label: "Year", type: "number"},
 ];
