@@ -4,8 +4,8 @@ import {FieldErrors, SubmitHandler, UseFormRegister} from "react-hook-form";
 import {ResizableWrapper} from "@/components/All/ResizableWrapper/ResizableWrapper";
 import FormFieldsRenderer from "@/components/All/FormFieldsRenderer/FormFieldsRenderer";
 import {Button} from "@/components/ui/button";
-import {FormFieldsConfig} from "@/components/All/FormField";
 import {ICar} from "@/common/interfaces/cars.interfaces";
+import {FormFieldsConfig} from "@/common/interfaces/forms.interfaces.ts";
 
 import css from "./index.module.css";
 

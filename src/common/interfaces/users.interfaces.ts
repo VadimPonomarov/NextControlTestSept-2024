@@ -117,3 +117,20 @@ export interface IUserCartResponse {
   skip: number;
   limit: number;
 }
+
+export interface IUserSession {
+  email: string;
+  picture: string;
+  sub: string;
+  accessToken: string;
+  refreshToken: string;
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+  iat: number;
+  exp: number;
+  jti: string;
+}
