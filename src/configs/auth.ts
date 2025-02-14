@@ -8,33 +8,33 @@ export const authConfig: AuthOptions = {
         Credentials({
             credentials: {
                 username: {
-                    label: "username",
+                    label: "Username",
                     type: "text",
                     required: true,
                 },
                 password: {
-                    label: "password",
+                    label: "Password",
                     type: "password",
                     required: true,
                 },
                 expiresInMins: {
-                    label: "expiresInMins",
+                    label: "Expires in Minutes",
                     type: "number",
                     required: true,
                 },
             },
             async authorize(credentials) {
-                if (!credentials?.username || !credentials?.password || !credentials?.expiresInMins) return null;
+                if (!credentials?.username || !credentials?.password) return null;
 
                 try {
                     const response = await apiAuthService.login(credentials as unknown as IDummyAuth);
 
                     // Проверка, что данные пользователя корректны
-                    if (!response.data || !response.data.id) {
+                    if (!response) {
                         throw new Error("Invalid login response");
                     }
 
-                    return { ...response.data, id: response.data.id.toString() } as unknown as User;
+                    return { ...response } as unknown as User;
                 } catch (error) {
                     console.error("Error in authorize function: ", error);
                     return null;
@@ -43,7 +43,7 @@ export const authConfig: AuthOptions = {
         }),
     ],
     pages: {
-        signIn: "/auth/signin", // Укажите путь к вашей форме авторизации
+        signIn: "api/auth", // Укажите путь к вашей форме авторизации
     },
     callbacks: {
         async jwt({ token, user }) {
@@ -58,6 +58,3 @@ export const authConfig: AuthOptions = {
         },
     },
 };
-
-
-

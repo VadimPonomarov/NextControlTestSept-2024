@@ -10,6 +10,7 @@ import { ArrowPathIcon, PaperAirplaneIcon } from "@heroicons/react/16/solid";
 import { IDummyAuth } from "@/common/interfaces/dummy.interfaces.ts";
 import { FormFieldsConfig } from "@/common/interfaces/forms.interfaces.ts";
 import UsersComboBox from "@/components/UsersComboBox/UsersComboBox.tsx";
+import { signIn } from "next-auth/react";
 
 import { schema } from "./index.joi";
 
@@ -36,47 +37,18 @@ const LoginForm: FC = () => {
 
     const onSubmit: SubmitHandler<IDummyAuth> = async (data) => {
         try {
-            const response = await fetch("https://dummyjson.com/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*", // Разрешаем все источники
-                    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS", // Разрешаем все методы
-                    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization" // Разрешаем указанные заголовки
-                },
-                body: JSON.stringify({
-                    username: data.username,
-                    password: data.password,
-                    expiresInMins: Number(data.expiresInMins),
-                }),
-                credentials: 'include'
+            const result = await signIn("credentials", {
+                redirect: false,
+                username: data.username,
+                password: data.password,
+                expiresInMins: Number(data.expiresInMins),
             });
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            if (result.error) {
+                throw new Error(result.error);
             }
 
-            const result = await response.json();
-
-            // Успешная аутентификация
-            console.log("Logged in successfully!", result);
-
-            // Установка сессии в NextAuth
-            const res = await fetch("/api/auth/callback/credentials", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: data.username,
-                    password: data.password,
-                    expiresInMins: Number(data.expiresInMins),
-                }),
-            });
-
-            if (!res.ok) {
-                throw new Error("Failed to set session in NextAuth");
-            }
+            console.log("Logged in successfully!");
 
         } catch (error) {
             if (error instanceof Error) {
@@ -111,8 +83,4 @@ const LoginForm: FC = () => {
 };
 
 export default LoginForm;
-
-
-
-
 
