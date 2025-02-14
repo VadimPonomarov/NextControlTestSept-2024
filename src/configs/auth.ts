@@ -28,12 +28,9 @@ export const authConfig: AuthOptions = {
 
                 try {
                     const response = await apiAuthService.login(credentials as unknown as IDummyAuth);
-
-                    // Проверка, что данные пользователя корректны
                     if (!response) {
                         throw new Error("Invalid login response");
                     }
-
                     return { ...response } as unknown as User;
                 } catch (error) {
                     console.error("Error in authorize function: ", error);
@@ -43,7 +40,7 @@ export const authConfig: AuthOptions = {
         }),
     ],
     pages: {
-        signIn: "api/auth", // Укажите путь к вашей форме авторизации
+        signIn: "/api/auth", // Укажите путь к вашей форме авторизации
     },
     callbacks: {
         async jwt({ token, user }) {

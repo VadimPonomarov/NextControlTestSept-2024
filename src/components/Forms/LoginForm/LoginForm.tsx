@@ -11,6 +11,7 @@ import { IDummyAuth } from "@/common/interfaces/dummy.interfaces.ts";
 import { FormFieldsConfig } from "@/common/interfaces/forms.interfaces.ts";
 import UsersComboBox from "@/components/UsersComboBox/UsersComboBox.tsx";
 import { signIn } from "next-auth/react";
+import {useRouter} from "next/navigation";
 
 import { schema } from "./index.joi";
 
@@ -23,6 +24,7 @@ const formFields: FormFieldsConfig<IDummyAuth> = [
 const LoginForm: FC = () => {
     const [error, setError] = useState<string | null>(null);
     const defaultValues: IDummyAuth = { username: "", password: "", expiresInMins: null };
+    const router = useRouter()
 
     const {
         register,
@@ -49,6 +51,7 @@ const LoginForm: FC = () => {
             }
 
             console.log("Logged in successfully!");
+            router.back()
 
         } catch (error) {
             if (error instanceof Error) {

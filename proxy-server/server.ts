@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage } from 'http';
 
 const app = express();
 const PORT = 3000;
@@ -37,7 +37,7 @@ function streamToString(stream: IncomingMessage): Promise<string> {
     });
 }
 
-app.use('/api', createProxyMiddleware(options));
+app.use('/api/auth', createProxyMiddleware(options));
 
 app.listen(PORT, () => {
     console.log(`Proxy server is running on http://localhost:${PORT}`);
