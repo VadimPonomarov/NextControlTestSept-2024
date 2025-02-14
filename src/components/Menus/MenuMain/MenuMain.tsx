@@ -16,7 +16,7 @@ export const MenuMain = () => {
     const menuItems: IMenuItem[] = [
         {path: "/", label: "Home", disabled: false},
         {path: "/cars", label: "Cars"},
-        {path: "/api/auth/signin", label: "Login", disabled: status === "authenticated"},
+        {path: "/api/auth", label: "Auth", disabled: status === "authenticated"},
         {
             path: "#", // Используем '#' для ссылки, если используется коллбэк
             label: <FaSignOutAlt size={24}/>, // Используем иконку вместо строки

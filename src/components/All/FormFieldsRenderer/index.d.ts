@@ -1,9 +1,9 @@
 import {FieldErrors, UseFormRegister} from "react-hook-form";
-import {FormFieldsConfig} from "@/components/All/FormField";
+import {FormFieldsConfig} from "@/common/interfaces/forms.interfaces.ts";
 
 export interface FormFieldsRendererProps<T> {
     errors: FieldErrors<T>;
     fields: FormFieldsConfig<T>;
-    item: T | null;
+    item?: T | null;
     register: UseFormRegister<T>;
 }

@@ -93,5 +93,49 @@
     .not-found-button {
         @apply mt-6;
     }
-
 }
+
+.container {
+    @apply flex items-center justify-center h-[88vh];
+}
+
+@screen sm {
+    .resizableWrapper {
+        @apply max-w-sm;
+    }
+}
+
+@screen md {
+    .resizableWrapper {
+        @apply max-w-md;
+    }
+}
+
+@screen lg {
+    .resizableWrapper {
+        @apply max-w-lg;
+    }
+}
+
+@screen xl {
+    .resizableWrapper {
+        @apply max-w-xl;
+    }
+}
+
+.resizer {
+    @apply absolute bottom-0 right-0 w-2.5 h-2.5 cursor-nwse-resize bg-gray-300;
+}
+
+.form {
+    @apply flex flex-col gap-2.5 w-full box-border;
+}
+
+.formGroup {
+    @apply flex flex-col gap-1;
+}
+
+.error {
+    @apply text-red-600 text-xs;
+}
+

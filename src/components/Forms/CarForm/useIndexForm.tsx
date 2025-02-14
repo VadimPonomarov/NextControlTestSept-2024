@@ -12,12 +12,12 @@ type IProps<T> = {
         values?: DefaultValues<T> | T,
         keepStateOptions?: KeepStateOptions,
     ) => void;
-    item: T;
+    item?: T;
     setAction?: Dispatch<SetStateAction<T>>;
     getValues?: UseFormGetValues<T>
 };
 
-export const useCarForm = ({resetAction, item, setAction, getValues}: IProps<ICar>) => {
+export const useIndexForm = ({resetAction, item, setAction, getValues}: IProps<ICar>) => {
     const [formData, setFormData] = useState<ICar | null>(null);
     const router = useRouter();
     const client = useQueryClient();

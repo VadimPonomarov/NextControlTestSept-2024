@@ -6,12 +6,12 @@ import {ICar} from "@/common/interfaces/cars.interfaces";
 import Link from "next/link";
 import {FaEdit, FaTrash} from "react-icons/fa";
 import SubmitButton from "@/components/All/SubmitButton/SubmitButton.tsx";
-import {useCarForm} from "@/components/Forms/CarForm/useCarForm.tsx";
+import {useIndexForm} from "@/components/Forms/CarForm/useIndexForm.tsx";
 
 type IProps = { item: ICar };
 
 export const CarCard: FC<IProps> = ({item}) => {
-    const {onDelete} = useCarForm({item})
+    const {onDelete} = useIndexForm({item})
     const handleDelete = async () => {
         onDelete()
     };

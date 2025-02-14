@@ -11,7 +11,7 @@ interface IProps {
   onCreateAction?: () => void;
 }
 
-export const CrudButtonGroup: FC<IProps> = ({
+export const ButtonGroupIconicCrud: FC<IProps> = ({
   orientation,
   onEditAction,
   onDeleteAction,
@@ -40,4 +40,4 @@ export const CrudButtonGroup: FC<IProps> = ({
   );
 };
 
-export default CrudButtonGroup;
+export default ButtonGroupIconicCrud;

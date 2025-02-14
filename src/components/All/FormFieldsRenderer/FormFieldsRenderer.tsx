@@ -1,11 +1,9 @@
-import React, {FC} from "react";
+import React from "react";
 import FormField from "@/components/All/FormField/FormField.tsx";
-import {ICar} from "@/common/interfaces/cars.interfaces";
 
-import {FormFieldsRendererProps} from ".";
+import { FormFieldsRendererProps } from ".";
 
-
-const FormFieldsRenderer: FC<FormFieldsRendererProps<ICar>> = ({fields, register, errors, item}) => (
+const FormFieldsRenderer = <T,>({ fields, register, errors, item }: FormFieldsRendererProps<T>) => (
     <>
         {fields.map((field) => {
             if (field.condition && !field.condition(item)) {
@@ -27,3 +25,4 @@ const FormFieldsRenderer: FC<FormFieldsRendererProps<ICar>> = ({fields, register
 );
 
 export default FormFieldsRenderer;
+
