@@ -1,6 +1,6 @@
 "use client";
 import { FC, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
 import { UserCard } from "@/components/Cards/UserCard/UserCard.tsx";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ interface IProps {
 }
 
 const UsersClient: FC<IProps> = ({ initialData }) => {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const limit = Number(searchParams.get('limit')) || 10;
     const skip = Number(searchParams.get('skip')) || 0;
@@ -38,8 +39,16 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         },
         initialPageParam: skip,
         initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
-        staleTime: Infinity,
+        staleTime: 5000,
     });
+
+    useEffect(() => {
+        if (data?.pages.length) {
+            const newSkip = data.pages.reduce((acc, page) => acc + page.users.length, 0);
+            const queryParams = new URLSearchParams({ limit: String(limit), skip: String(newSkip) });
+            window.history.replaceState(null, '', `/users?${queryParams.toString()}`);
+        }
+    }, [data?.pages.length, limit, skip]);
 
     if (error) {
         return <div>Error: {error.message}</div>;
