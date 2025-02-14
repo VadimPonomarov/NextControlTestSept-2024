@@ -11,7 +11,7 @@ import { IDummyAuth } from "@/common/interfaces/dummy.interfaces.ts";
 import { FormFieldsConfig } from "@/common/interfaces/forms.interfaces.ts";
 import UsersComboBox from "@/components/UsersComboBox/UsersComboBox.tsx";
 import { signIn } from "next-auth/react";
-import {useRouter} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { schema } from "./index.joi";
 
@@ -24,7 +24,8 @@ const formFields: FormFieldsConfig<IDummyAuth> = [
 const LoginForm: FC = () => {
     const [error, setError] = useState<string | null>(null);
     const defaultValues: IDummyAuth = { username: "", password: "", expiresInMins: null };
-    const router = useRouter()
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
 
     const {
         register,
@@ -44,14 +45,17 @@ const LoginForm: FC = () => {
                 username: data.username,
                 password: data.password,
                 expiresInMins: Number(data.expiresInMins),
+                callbackUrl,
             });
 
-            if (result.error) {
+            if (result?.error) {
                 throw new Error(result.error);
             }
 
-            console.log("Logged in successfully!");
-            router.back()
+            // Redirect to the callback URL or home page
+            if (result?.url) {
+                window.location.href = result.url;
+            }
 
         } catch (error) {
             if (error instanceof Error) {
@@ -86,4 +90,3 @@ const LoginForm: FC = () => {
 };
 
 export default LoginForm;
-

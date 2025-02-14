@@ -40,7 +40,7 @@ export const authConfig: AuthOptions = {
         }),
     ],
     pages: {
-        signIn: "/api/auth", // Укажите путь к вашей форме авторизации
+        signIn: "/api/auth",
     },
     callbacks: {
         async jwt({ token, user }) {

@@ -11,11 +11,12 @@ export const schema = Joi.object<IDummyAuth>({
         "any.required": "Password is required",
         "string.empty": "Password is not allowed to be empty",
     }),
-    expiresInMins: Joi.number().min(30).max(60).required().messages({
+    expiresInMins: Joi.number().valid(30, 60).required().messages({
         "any.required": "ExpiresInMins is required",
-        "number.min": "ExpiresInMins must be at least 30",
-        "number.max": "ExpiresInMins must be at most 60",
+        "number.base": "ExpiresInMins must be a number",
+        "any.only": "ExpiresInMins must be either 30 or 60",
         "string.empty": "ExpiresInMins is not allowed to be empty",
     }),
 });
+
 

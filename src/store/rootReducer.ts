@@ -1,7 +1,6 @@
 import { combineSlices } from "@reduxjs/toolkit";
-import { iniSlice } from "@/store/slises/Ini/iniSlice";
 
-const rootReducer = combineSlices(iniSlice);
+const rootReducer = combineSlices();
 
 export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;
