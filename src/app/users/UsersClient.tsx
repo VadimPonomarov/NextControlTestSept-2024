@@ -27,10 +27,14 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         }
     }, [initialData]);
 
-    useEffect(() => {
-        const queryParams = new URLSearchParams({ limit: String(limit), skip: String(skip) });
+    const updateUrlParams = (newLimit: number, newSkip: number) => {
+        const queryParams = new URLSearchParams({ limit: String(newLimit), skip: String(newSkip) });
         router.replace(`/users?${queryParams.toString()}`);
-    }, [skip, limit, router]);
+    };
+
+    useEffect(() => {
+        updateUrlParams(limit, skip);
+    }, [limit, skip, router]);
 
     const {
         data,
@@ -42,7 +46,7 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         queryKey: ["users", limit, skip],
         queryFn: async ({ pageParam = skip }) => await apiUsers.users({ limit: String(limit), skip: String(pageParam) }),
         getNextPageParam: (lastPage, allPages) => {
-            const newSkip = allPages.reduce((acc, page) => acc + page.users.length, 0);
+            const newSkip = allPages.reduce((acc, page) => acc + page.users.length, skip);
             return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
@@ -61,14 +65,24 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         return allUsers.find(user => user.id === id);
     });
 
+    const handleNextPage = () => {
+        fetchNextPage();
+        updateUrlParams(limit, skip + limit);
+    };
+
+    const handlePageChange = (newSkip: number) => {
+        updateUrlParams(limit, newSkip);
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+    };
+
     if (error) {
         return <div>Error: {error.message}</div>;
     }
 
     return (
         <>
-            <PaginationComponent total={total} />
-            <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={fetchNextPage}>
+            <PaginationComponent total={total} currentPageSkip={skip} onPageChange={handlePageChange} />
+            <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={handleNextPage}>
                 {uniqueUsers.map((user: IUser) => (
                     <div key={user.id}>
                         <UserCard item={user} />
@@ -80,15 +94,4 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
 };
 
 export default UsersClient;
-
-
-
-
-
-
-
-
-
-
-
 
