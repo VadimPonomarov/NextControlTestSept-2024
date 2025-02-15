@@ -13,7 +13,7 @@ const fetchUsers = async (): Promise<IUsersResponse | Error> => {
     if (!session || !session.user) {
         throw new Error('Unauthorized');
     }
-    const { accessToken } = session.user as unknown as IUserSession;
+    const {accessToken} = session.user as unknown as IUserSession;
     const headers = {
         Authorization: `Bearer ${accessToken}`,
     };
