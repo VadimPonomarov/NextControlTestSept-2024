@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input.tsx";
 
 const SearchParamLimitSelector = () => {
   const searchParams = useSearchParams();
@@ -13,7 +12,7 @@ const SearchParamLimitSelector = () => {
     router.replace(`/users?${newParams.toString()}`);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setInputValue(event.target.value);
     handleLimitChange(event.target.value);
   };
@@ -44,23 +43,25 @@ const SearchParamLimitSelector = () => {
     setInputValue(limit);
   }, [searchParams]);
 
-  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    event.target.select();
-  };
-
   return (
       <div className="flex items-center gap-2">
         <span onClick={handleReset} className="text-xs">💥</span>
-        <Input
-            type="number"
-            value={inputValue}
-            onChange={handleInputChange}
-            onFocus={handleFocus}
-            className="w-[70px] border-none text-xs focus:border-none"
-            placeholder="Limit"
-        />
+        <select value={inputValue} onChange={handleSelectChange} className="w-[70px] border-none text-xs focus:border-none">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+        </select>
       </div>
   );
 };
 
 export default SearchParamLimitSelector;
+
+
+
+
+
+
+

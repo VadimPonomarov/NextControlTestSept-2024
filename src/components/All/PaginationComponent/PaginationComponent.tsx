@@ -29,7 +29,7 @@ export const PaginationComponent: FC<IProps> = ({ total }) => {
                 <TooltipTrigger>
                   <SearchParamSkipSelector />
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className={styles.tooltipContent}>
+                <TooltipContent side="top" className={styles.tooltipContent}>
                   <p>Skip</p>
                 </TooltipContent>
               </Tooltip>
@@ -56,7 +56,7 @@ export const PaginationComponent: FC<IProps> = ({ total }) => {
                 <TooltipTrigger>
                   <SearchParamLimitSelector />
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className={styles.tooltipContent}>
+                <TooltipContent side="top" className={styles.tooltipContent}>
                   <p>Limit</p>
                 </TooltipContent>
               </Tooltip>
