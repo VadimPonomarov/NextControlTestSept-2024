@@ -1,3 +1,4 @@
+"use client"
 import { Check } from "lucide-react";
 import {FC, useState} from "react";
 import { Button } from "@/components/ui/button.tsx";

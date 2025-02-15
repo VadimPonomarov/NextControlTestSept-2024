@@ -20,7 +20,7 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         isFetchingNextPage,
         hasNextPage,
         total,
-    } = useUsersPagination({ initialData, baseUrl });
+    } = useUsersPagination({ initialData });
 
     if (error) {
         return <div>Error: {error.message}</div>;
