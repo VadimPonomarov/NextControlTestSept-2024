@@ -19,7 +19,7 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
     const queryClient = useQueryClient();
     const limit = Number(searchParams.get("limit")) || 10;
     const skip = Number(searchParams.get("skip")) || 0;
-    const total = initialData instanceof Error ? 0 : initialData.total;
+    const total = initialData instanceof Error ? 0 : Number(initialData.total);
 
     useEffect(() => {
         if (initialData instanceof Error) {
@@ -48,12 +48,11 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         initialPageParam: skip,
         initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
         staleTime: 0,
-        keepPreviousData: true,
     });
 
     useEffect(() => {
         if (skip === 0) {
-            queryClient.resetQueries("users");
+            queryClient.invalidateQueries({ queryKey: ["users"] });
         }
     }, [skip, queryClient]);
 
@@ -81,6 +80,8 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
 };
 
 export default UsersClient;
+
+
 
 
 
