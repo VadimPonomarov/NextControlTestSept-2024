@@ -1,9 +1,9 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
 import { UserCard } from "@/components/Cards/UserCard/UserCard.tsx";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { apiUsers } from "@/services/apiUsers.ts";
 import { signOut } from "next-auth/react";
 import InfiniteScroll from "@/components/All/InfiniteScroll/InfiniteScroll.tsx";
@@ -16,6 +16,7 @@ interface IProps {
 const UsersClient: FC<IProps> = ({ initialData }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const queryClient = useQueryClient();
     const limit = Number(searchParams.get("limit")) || 10;
     const skip = Number(searchParams.get("skip")) || 0;
     const total = initialData instanceof Error ? 0 : initialData.total;
@@ -26,12 +27,18 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         }
     }, [initialData]);
 
+    useEffect(() => {
+        const queryParams = new URLSearchParams({ limit: String(limit), skip: String(skip) });
+        router.replace(`/users?${queryParams.toString()}`);
+    }, [skip, limit, router]);
+
     const {
         data,
         error,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
+        refetch,
     } = useInfiniteQuery<IUsersResponse, Error>({
         queryKey: ["users", limit, skip],
         queryFn: async ({ pageParam = skip }) => await apiUsers.users({ limit: String(limit), skip: String(pageParam) }),
@@ -43,12 +50,17 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
         staleTime: 0,
         keepPreviousData: true,
+        onSuccess: () => {
+            if (skip !== 0) {
+                queryClient.invalidateQueries({ queryKey: ["users"], refetchType: "all" });
+            }
+        }
     });
 
-    useEffect(() => {
-        const queryParams = new URLSearchParams({ limit: String(limit), skip: String(skip) });
-        router.replace(`/users?${queryParams.toString()}`);
-    }, [skip, limit, router]);
+    const handleFetchNextPage = async () => {
+        await fetchNextPage();
+        refetch();
+    };
 
     const allUsers = data?.pages.flatMap((page) => page.users) || [];
 
@@ -59,7 +71,7 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
     return (
         <>
             <PaginationComponent total={total} />
-            <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={fetchNextPage}>
+            <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={handleFetchNextPage}>
                 {allUsers.map((user: IUser, index) => (
                     <div key={user.id + index}>
                         <UserCard item={user} />
@@ -71,6 +83,7 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
 };
 
 export default UsersClient;
+
 
 
 
