@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
 import { UserCard } from "@/components/Cards/UserCard/UserCard.tsx";
@@ -38,31 +38,29 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-        refetch,
     } = useInfiniteQuery<IUsersResponse, Error>({
         queryKey: ["users", limit, skip],
         queryFn: async ({ pageParam = skip }) => await apiUsers.users({ limit: String(limit), skip: String(pageParam) }),
         getNextPageParam: (lastPage, allPages) => {
             const newSkip = allPages.reduce((acc, page) => acc + page.users.length, 0);
-            return lastPage.users.length < limit ? undefined : newSkip;
+            return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
         initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
         staleTime: 0,
         keepPreviousData: true,
-        onSuccess: () => {
-            if (skip !== 0) {
-                queryClient.invalidateQueries({ queryKey: ["users"], refetchType: "all" });
-            }
-        }
     });
 
-    const handleFetchNextPage = async () => {
-        await fetchNextPage();
-        refetch();
-    };
+    useEffect(() => {
+        if (skip === 0) {
+            queryClient.resetQueries("users");
+        }
+    }, [skip, queryClient]);
 
     const allUsers = data?.pages.flatMap((page) => page.users) || [];
+    const uniqueUsers = Array.from(new Set(allUsers.map(user => user.id))).map(id => {
+        return allUsers.find(user => user.id === id);
+    });
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -71,9 +69,9 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
     return (
         <>
             <PaginationComponent total={total} />
-            <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={handleFetchNextPage}>
-                {allUsers.map((user: IUser, index) => (
-                    <div key={user.id + index}>
+            <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={fetchNextPage}>
+                {uniqueUsers.map((user: IUser) => (
+                    <div key={user.id}>
                         <UserCard item={user} />
                     </div>
                 ))}
@@ -83,6 +81,10 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
 };
 
 export default UsersClient;
+
+
+
+
 
 
 
