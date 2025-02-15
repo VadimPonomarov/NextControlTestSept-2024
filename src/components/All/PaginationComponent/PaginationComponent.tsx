@@ -1,3 +1,4 @@
+"use client";
 import { FC } from "react";
 import {
   Pagination,
@@ -10,15 +11,14 @@ import {
 } from "@/components/ui/pagination.tsx";
 import SearchParamSkipSelector from "@/components/All/SearchParamSkipSelector/SearchParamSkipSelector.tsx";
 import SearchParamLimitSelector from "@/components/All/SearchParamLimitSelector/SearchParamLimitSelector.tsx";
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import styles from "./index.module.css";
 import { usePaginationComponent } from "./usePaginationComponent";
 import { IProps } from "./interfaces";
 
-export const PaginationComponent: FC<IProps> = ({ total }) => {
-  const { setNext, setPrev, currentPage, hasNextPage, hasPrevPage } =
-      usePaginationComponent({ total });
+export const PaginationComponent: FC<IProps> = ({ total, baseUrl }) => {
+  const { setNext, setPrev, currentPage, hasNextPage, hasPrevPage } = usePaginationComponent({ total, baseUrl });
 
   return (
       <>
@@ -66,4 +66,5 @@ export const PaginationComponent: FC<IProps> = ({ total }) => {
       </>
   );
 };
+
 
