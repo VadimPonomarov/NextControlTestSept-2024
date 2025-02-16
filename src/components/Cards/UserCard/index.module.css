@@ -4,7 +4,7 @@
 
 
 .card {
-    @apply h-[250px] w-[300px] overflow-auto;
+    @apply h-auto w-[300px] overflow-auto;
 }
 
 

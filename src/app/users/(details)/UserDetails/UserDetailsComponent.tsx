@@ -8,7 +8,7 @@ import {FC} from "react";
 
 type IProps = { user: IUserResponse }
 
-const UserDetails: FC<IProps> = async (props) => {
+const UserDetailsComponent: FC<IProps> = async (props) => {
     const user = (await props).user
 
     return (
@@ -41,5 +41,5 @@ const UserDetails: FC<IProps> = async (props) => {
     );
 };
 
-export default UserDetails;
+export default UserDetailsComponent;
 

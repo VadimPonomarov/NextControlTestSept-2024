@@ -9,19 +9,19 @@ const options = {
     target: 'https://dummyjson.com',
     changeOrigin: true,
     pathRewrite: {
-        '^/api': '', // Удаляет /api из пути
+        '^/api': '',
     },
     onProxyReq: (proxyReq: IncomingMessage, req: Request, res: Response) => {
         proxyReq.headers = {
             ...proxyReq.headers,
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': 'http://localhost:3000',
             'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
         };
     },
     selfHandleResponse: true,
     onProxyRes: async (proxyRes: IncomingMessage, req: Request, res: Response) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
         res.end(await streamToString(proxyRes));

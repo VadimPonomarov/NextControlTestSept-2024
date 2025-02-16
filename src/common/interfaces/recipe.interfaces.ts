@@ -17,12 +17,16 @@ export interface IRecipe {
   mealType: string[];
 }
 
-export interface IRecipeResponse extends IRecipeSearch {
+export interface IRecipesResponse extends IRecipeSearch {
   recipes: IRecipe[];
 }
+
+export type IRecipeResponse = IRecipe
 
 export interface IRecipeSearch {
   total: string;
   skip: string;
   limit: string;
 }
+
+
