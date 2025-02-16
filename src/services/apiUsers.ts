@@ -1,15 +1,6 @@
-import {IUser, IUserCartResponse, IUsersResponse, IUsersSearch,} from "@/common/interfaces/users.interfaces.ts";
+import {IUser, IUserCartResponse, IUsersResponse} from "@/common/interfaces/users.interfaces.ts";
 import {baseUrl} from "@/common/constants/constants.ts";
 import {getAxios} from "@/services/axios/getAxios.ts";
-import {AxiosHeaders, AxiosHeaderValue} from "axios";
-
-export type AxiosHeadersCustom = AxiosHeaders | & {
-    Accept: AxiosHeaderValue;
-    "Content-Length": AxiosHeaderValue;
-    "User-Agent": AxiosHeaderValue;
-    "Content-Encoding": AxiosHeaderValue;
-    Authorization: AxiosHeaderValue;
-}
 
 const api = getAxios(baseUrl + "/users");
 export const apiUsers = {
@@ -23,11 +14,11 @@ export const apiUsers = {
             console.error(e);
         }
     },
-    users: async (params?: Partial<IUsersSearch>, headers?: AxiosHeadersCustom): Promise<IUsersResponse> => {
+    users: async (params: Record<string, string>): Promise<IUsersResponse> => {
         try {
             const qParams = new URLSearchParams(params as Record<string, string>);
             const response = await api.get("", {
-                params: qParams, headers
+                params: qParams
             });
             return await response.data;
         } catch (e) {

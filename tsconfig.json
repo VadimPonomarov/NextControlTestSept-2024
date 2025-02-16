@@ -23,6 +23,7 @@
     "jsx": "preserve",
     "incremental": true,
     "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
     "plugins": [
       {
         "name": "next"
