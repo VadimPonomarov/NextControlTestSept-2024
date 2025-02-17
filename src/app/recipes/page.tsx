@@ -2,7 +2,7 @@ import {FC} from "react";
 import {Metadata} from "next";
 import {IRecipesResponse} from "@/common/interfaces/recipe.interfaces.ts";
 import RecipesClient from "@/app/recipes/RecipesClient.tsx";
-import {fetchRecipes} from "@/app/recipes/helpers.ts";
+import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
 
 import styles from "./index.module.css";
 

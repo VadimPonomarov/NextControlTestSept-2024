@@ -1,5 +1,5 @@
-import {IRecipeResponse} from "@/common/interfaces/recipe.interfaces";
-import {baseUrl, getAuthorizationHeaders} from "@/common/constants/constants";
+import { IRecipeResponse } from "@/common/interfaces/recipe.interfaces.ts";
+import { baseUrl, getAuthorizationHeaders } from "@/common/constants/constants.ts";
 
 export async function fetchRecipes(params?: Record<string, string>) {
     const urlSearchParams = new URLSearchParams(params).toString();
@@ -7,6 +7,7 @@ export async function fetchRecipes(params?: Record<string, string>) {
 
     const response = await fetch(`${baseUrl}/auth/recipes?${urlSearchParams}`, {
         headers,
+        method: 'GET',
     });
 
     if (!response.ok) {
@@ -21,6 +22,7 @@ export const fetchRecipeById = async (id: string): Promise<IRecipeResponse> => {
 
     const response = await fetch(`${baseUrl}/auth/recipes/${id}`, {
         headers,
+        method: 'GET',
     });
 
     if (!response.ok) {
