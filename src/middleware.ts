@@ -11,10 +11,10 @@ async function setHeaders(res: NextResponse) {
 
 export async function middleware(req: NextRequestWithAuth) {
 
-    // const referrer = req.headers.get('referer');
-    // if (!referrer || referrer === req.url) {
-    //     return NextResponse.redirect(new URL('/error', req.url));
-    // }
+    const referrer = req.headers.get('referer');
+    if (!referrer || referrer === req.url) {
+        return NextResponse.redirect(new URL('/error', req.url));
+    }
 
     const response = await withAuth(req, {});
     if (response) {
