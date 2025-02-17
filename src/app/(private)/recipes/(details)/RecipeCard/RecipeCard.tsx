@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { v4 as uuidv4 } from "uuid";
 
 import styles from "./index.module.css";
-import { IProps } from "./interfaces";
+import { IProps } from "./interfaces.ts";
 
 
 export const RecipeCard: FC<IProps> = ({ item }) => {

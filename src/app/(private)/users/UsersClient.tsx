@@ -1,11 +1,11 @@
 "use client";
 import { FC } from "react";
 import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
-import { UserCard } from "@/components/Cards/UserCard/UserCard.tsx";
+import { UserCard } from "@/app/(private)/users/(details)/UserCard/UserCard.tsx";
 import InfiniteScroll from "@/components/All/InfiniteScroll/InfiniteScroll.tsx";
 import { PaginationComponent } from "@/components/All/PaginationComponent/PaginationComponent.tsx";
 
-import { useUsersPagination } from "./useUsersPagination";
+import { useUsersPagination } from "./useUsersPagination.ts";
 
 interface IProps {
     initialData: IUsersResponse | Error;

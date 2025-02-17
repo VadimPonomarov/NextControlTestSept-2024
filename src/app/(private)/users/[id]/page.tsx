@@ -1,11 +1,11 @@
 import React from 'react';
 import {IUserResponse} from "@/common/interfaces/users.interfaces.ts";
 import {Metadata} from "next";
-import UserDetailsComponent from "@/app/users/(details)/UserDetails/UserDetailsComponent.tsx";
+import UserDetailsComponent from "@/app/(private)/users/(details)/UserDetails/UserDetailsComponent.tsx";
 import {fetchUserById} from "@/app/api/users/helpers.ts";
 import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
 import {IRecipe, IRecipesResponse} from "@/common/interfaces/recipe.interfaces.ts";
-import {RecipeCard} from "@/components/Cards/RecipeCard/RecipeCard.tsx";
+import {RecipeCard} from "@/app/(private)/recipes/(details)/RecipeCard/RecipeCard.tsx";
 
 interface IProps {
     params: Promise<{ id: string }>

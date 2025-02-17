@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card.tsx";
 
 import styles from "./index.module.css";
-import { IProps } from "./interfaces";
+import { IProps } from "./interfaces.ts";
 
 export const UserCard: FC<IProps> = ({ item }) => {
 

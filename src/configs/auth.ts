@@ -1,7 +1,7 @@
 import { AuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { apiAuthService } from "@/services/apiAuth.ts";
 import { IDummyAuth } from "@/common/interfaces/dummy.interfaces.ts";
+import { apiAuthService } from "@/services/apiAuth.ts";
 
 export const authConfig: AuthOptions = {
     providers: [

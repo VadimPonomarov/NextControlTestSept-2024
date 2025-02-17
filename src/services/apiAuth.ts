@@ -1,11 +1,5 @@
 import {getAxios} from "@/services/axios/getAxios.ts";
-import {
-    IDummyAuth,
-    IDummyAuthLoginResponse,
-    IDummyAuthMeResponse,
-    IDummyAuthRefreshBody,
-    IDummyAuthRefreshResponse
-} from "@/common/interfaces/dummy.interfaces.ts";
+import {IDummyAuth, IDummyAuthLoginResponse} from "@/common/interfaces/dummy.interfaces.ts";
 
 const apiAuth = getAxios("https://dummyjson.com")
 export const apiAuthService = {
@@ -16,25 +10,6 @@ export const apiAuthService = {
                 credentials,
                 {withCredentials: true, withXSRFToken: true}
             );
-            return response.data
-        } catch (e) {
-            console.log(e);
-        }
-    },
-    refresh: async (body: IDummyAuthRefreshBody): Promise<IDummyAuthRefreshResponse> => {
-        try {
-            const response = await apiAuth.post<IDummyAuthRefreshResponse>(
-                "refresh",
-                body,
-            );
-            return response.data
-        } catch (e) {
-            console.log(e);
-        }
-    },
-    me: async (): Promise<IDummyAuthMeResponse> => {
-        try {
-            const response = await apiAuth.get<IDummyAuthMeResponse>("me");
             return response.data
         } catch (e) {
             console.log(e);
