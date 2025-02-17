@@ -6,9 +6,8 @@ import {
     IDummyAuthRefreshBody,
     IDummyAuthRefreshResponse
 } from "@/common/interfaces/dummy.interfaces.ts";
-import {baseUrl} from "@/common/constants/constants.ts";
 
-const apiAuth = getAxios(baseUrl)
+const apiAuth = getAxios("https://dummyjson.com")
 export const apiAuthService = {
     login: async (credentials: IDummyAuth): Promise<IDummyAuthLoginResponse> => {
         try {
