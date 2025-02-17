@@ -7,7 +7,7 @@ import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
 import styles from "./index.module.css";
 
 const RecipesPage: FC = async () => {
-    const response = await fetchRecipes() as unknown as IRecipesResponse | Error;
+    const response = await fetchRecipes() as unknown as IRecipesResponse;
 
     return (
         <div className={styles.absoluteContainer}>

@@ -21,15 +21,14 @@ export const RecipeCard: FC<IProps> = ({ item }) => {
         <CardDescription>
           Tags:
           <span className={"flex gap-1 flex-wrap mt-2"}>
-            {location.pathname.includes("recipes") &&
-              item.tags.map((tag: string) => (
-                <Button
-                  key={uuidv4()}
-                  variant={"outline"}
-                  className={"h-auto w-auto p-0"}
-                >
-                  {tag}
-                </Button>
+              {item.tags.map((tag: string) => (
+                  <Button
+                      key={uuidv4()}
+                      variant={"outline"}
+                      className={"h-auto w-auto p-0"}
+                  >
+                    {tag}
+                  </Button>
               ))}
           </span>
         </CardDescription>
