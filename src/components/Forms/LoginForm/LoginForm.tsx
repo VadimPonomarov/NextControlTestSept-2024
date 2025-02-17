@@ -9,7 +9,7 @@ import ButtonGroup from "@/components/All/ButtonGroup/ButtonGroup.tsx";
 import {ArrowPathIcon, PaperAirplaneIcon} from "@heroicons/react/16/solid";
 import {IDummyAuth} from "@/common/interfaces/dummy.interfaces.ts";
 import {FormFieldsConfig} from "@/common/interfaces/forms.interfaces.ts";
-import UsersComboBox from "@/app/users/(details)/UsersComboBox/UsersComboBox.tsx";
+import UsersComboBox from "@/app/(private)/users/(details)/UsersComboBox/UsersComboBox.tsx";
 import {signIn} from "next-auth/react";
 import {useSearchParams} from "next/navigation";
 

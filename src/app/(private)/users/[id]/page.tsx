@@ -1,11 +1,11 @@
 import React from 'react';
 import {IUserResponse} from "@/common/interfaces/users.interfaces.ts";
 import {Metadata} from "next";
-import UserDetailsComponent from "@/app/users/(details)/UserDetails/UserDetailsComponent.tsx";
+import UserDetailsComponent from "@/app/(private)/users/(details)/UserDetails/UserDetailsComponent.tsx";
 import {fetchUserById} from "@/app/api/users/helpers.ts";
 import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
 import {IRecipe, IRecipesResponse} from "@/common/interfaces/recipe.interfaces.ts";
-import {RecipeCard} from "@/app/recipes/(details)/RecipeCard/RecipeCard.tsx";
+import {RecipeCard} from "@/app/(private)/recipes/(details)/RecipeCard/RecipeCard.tsx";
 
 interface IProps {
     params: Promise<{ id: string }>
@@ -19,10 +19,10 @@ const UserDetails = async ({params}: IProps) => {
     if (user instanceof Error) return null
     return (
         <div className={"flex flex-row h-screen w-screen"}>
-            <div className={"w-1/2 flex justify-center items-center"}>
+            <div className={"w-1/3 flex justify-center items-center h-[85vh]"}>
                 <UserDetailsComponent user={user}/>
             </div>
-            <div className={"w-1/2 flex flex-wrap gap-4 justify-start "}>
+            <div className={"w-2/3 flex flex-wrap grow-1 gap-4 justify-start items-start"}>
                 {filtered.map((recipe: IRecipe) => (
                     <div key={recipe.id}>
                         <RecipeCard item={recipe}/>
