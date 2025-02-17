@@ -43,7 +43,7 @@ export async function middleware(req: NextRequestWithAuth) {
 
         const res = NextResponse.next();
         return await setHeaders(res);
-    } catch (error) {
+    } catch {
         return NextResponse.redirect(new URL('/api/auth', req.url));
     }
 }

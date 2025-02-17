@@ -4,10 +4,9 @@ import {useSearchParams} from "next/navigation";
 import {useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
 import {signOut} from "next-auth/react";
 import {IUser, IUsersResponse} from "@/common/interfaces/users.interfaces.ts";
-import {apiUsers} from "@/services/apiUsers.ts";
 
 interface IProps {
-    initialData: IUsersResponse | Error;
+    initialData: IUsersResponse;
 }
 
 export const useUsersPagination = ({initialData}: IProps) => {
@@ -32,8 +31,8 @@ export const useUsersPagination = ({initialData}: IProps) => {
         isFetchingNextPage,
     } = useInfiniteQuery<IUsersResponse, Error>({
         queryKey: ["users", limit, skip],
-        queryFn: async ({pageParam = skip}) =>
-            await apiUsers.users({limit: String(limit), skip: String(pageParam)}),
+        queryFn: async ({ pageParam = skip }) =>
+            await fetch(`/api/users?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
         getNextPageParam: (lastPage, allPages) => {
             const newSkip = allPages.reduce((acc, page) => acc + page.users.length, skip);
             return newSkip < total ? newSkip : undefined;
