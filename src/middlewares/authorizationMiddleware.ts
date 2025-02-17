@@ -3,20 +3,17 @@ import { getCookie } from 'cookies-next';
 
 export async function middleware(req: NextRequest) {
     try {
-        // Извлечение accessToken из cookie
-        const accessTokenPromise = getCookie('accessToken', { req });
+        const accessTokenPromise = await getCookie('accessToken', { req });
 
-        // Дожидаемся значения accessToken
         const accessToken = await accessTokenPromise;
         console.log(accessToken)
 
-        // if (!accessToken) {
-        //     return NextResponse.redirect(new URL('/api/auth', req.url));
-        // }
+        if (!accessToken) {
+            return NextResponse.redirect(new URL('/api/auth', req.url));
+        }
 
         const res = NextResponse.next();
 
-        // Устанавливаем необходимые заголовки и параметры
         res.headers.set('Content-Type', 'application/json');
         res.headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
         res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
