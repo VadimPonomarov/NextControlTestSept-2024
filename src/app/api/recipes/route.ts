@@ -1,4 +1,3 @@
-// src/app/api/recipes/route.ts
 import { fetchRecipes } from '@/app/recipes/helpers';
 import { NextRequest, NextResponse } from 'next/server';
 
