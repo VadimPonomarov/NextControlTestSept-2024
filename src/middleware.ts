@@ -12,12 +12,9 @@ async function setHeaders(res: NextResponse) {
 export async function middleware(req: NextRequestWithAuth) {
     console.log('Middleware start for URL:', req.url);
 
-    if (req.url.includes('/api/')) {
-        const referrer = req.headers.get('referer');
-        if (!referrer || !referrer.includes('/api/')) {
-            console.log('Direct access to API is blocked. Redirecting to /error.');
-            return NextResponse.redirect(new URL('/error', req.url));
-        }
+    if (req.url.includes('/api/') && (!req.headers.get('referer') || req.headers.get('referer') === req.url)) {
+        console.log('Direct access to API from the address bar is blocked. Redirecting to /error.');
+        return NextResponse.redirect(new URL('/error', req.url));
     }
 
     const response = await withAuth(req, {});
@@ -34,7 +31,7 @@ export async function middleware(req: NextRequestWithAuth) {
         }
 
         if (req.url.startsWith('/api/') && !req.url.includes('/api/auth')) {
-            const url = new URL(req.url, req.url.startsWith('https') ? 'https://' : 'http://localhost:3000');
+            const url = new URL(req.url, 'http://localhost:3000');
             url.pathname = url.pathname.replace(/^\/api/, '');
             console.log('Original URL:', req.url);
             console.log('Rewritten URL:', url.toString());
