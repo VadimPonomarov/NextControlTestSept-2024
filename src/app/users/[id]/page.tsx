@@ -15,7 +15,7 @@ const UserDetails = async ({params}: IProps) => {
     const {id} = await params
     const user = await fetchUserById(id) as unknown as IUserResponse
     const response = await fetchRecipes({limit:"0"}) as unknown as IRecipesResponse;
-    const filtered = response.recipes.filter(item => item.id === Number(id))
+    const filtered = response.recipes.filter(item => item.userId === Number(id))
     if (user instanceof Error) return null
     return (
         <div className={"flex flex-row h-screen w-screen"}>
