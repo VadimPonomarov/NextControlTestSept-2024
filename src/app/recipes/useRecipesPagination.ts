@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces.ts";
+import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces";
 
 interface IProps {
     initialData: IRecipesResponse | Error;
@@ -29,10 +29,19 @@ export const useRecipesPagination = ({ initialData }: IProps) => {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useInfiniteQuery<IRecipesResponse>({
+    } = useInfiniteQuery<IRecipesResponse, Error>({
         queryKey: ["recipes", limit, skip],
-        queryFn: async ({ pageParam = skip }) =>
-            await fetch(`/api/recipes?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
+        queryFn: async ({ pageParam = skip }) => {
+            const response = await fetch(`/api/recipes?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`);
+            const text = await response.text();
+            try {
+                return JSON.parse(text);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                console.error("Received response text:", text);
+                throw new Error("Error fetching recipes");
+            }
+        },
         getNextPageParam: (lastPage, allPages) => {
             const newSkip = allPages.reduce((acc, page) => acc + (page?.recipes?.length || 0), skip);
             return newSkip < total ? newSkip : undefined;
@@ -47,8 +56,8 @@ export const useRecipesPagination = ({ initialData }: IProps) => {
         const validRecipes = allRecipes.filter(recipe => recipe && recipe.id);
         const uniqueRecipes = Array.from(new Set(validRecipes.map(recipe => recipe.id))).map(id => {
             return validRecipes.find(recipe => recipe.id === id);
-        });
-        setUniqueRecipes(uniqueRecipes);
+        }).filter(recipe => recipe !== undefined);
+        setUniqueRecipes(uniqueRecipes as IRecipe[]);
     }, [data]);
 
     useEffect(() => {
@@ -70,5 +79,3 @@ export const useRecipesPagination = ({ initialData }: IProps) => {
         total,
     };
 };
-
-

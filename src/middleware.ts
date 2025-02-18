@@ -12,12 +12,10 @@ async function setHeaders(res: NextResponse) {
 export async function middleware(req: NextRequestWithAuth) {
     console.log('Middleware start for URL:', req.url);
 
-    if (req.url.includes('/api/')) {
-        const referrer = req.headers.get('referer');
-        if (!referrer || !referrer.includes('/api/')) {
-            console.log('Direct access to API is blocked. Redirecting to /error.');
-            return NextResponse.redirect(new URL('/error', req.url));
-        }
+    const referrer = req.headers.get('referer');
+    if (req.url.includes('/api/') && (!referrer || referrer === req.url)) {
+        console.log('Direct access to API from the address bar is blocked. Redirecting to /error.');
+        return NextResponse.redirect(new URL('/error', req.url));
     }
 
     const response = await withAuth(req, {});
@@ -39,8 +37,7 @@ export async function middleware(req: NextRequestWithAuth) {
             console.log('Original URL:', req.url);
             console.log('Rewritten URL:', url.toString());
 
-            const res = NextResponse.rewrite(url.toString());
-            return await setHeaders(res);
+            return NextResponse.rewrite(url.toString());
         }
 
         const res = NextResponse.next();
@@ -61,4 +58,3 @@ export const config = {
         '/users/:path*'
     ],
 };
-
