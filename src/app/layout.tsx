@@ -5,6 +5,7 @@ import RootProvider from "@/common/providers/RootProvider";
 import {PageTracker} from "react-page-tracker";
 import ThemeToggle from "@/components/All/ThemeToggle/ThemeToggle.tsx";
 import AuthBadge from "@/components/All/AuthBadge/AuthBadge.tsx";
+import {MagicBackButton} from "@/components/ui/magicBackButton.tsx";
 
 import {geistMono, geistSans} from "./constants";
 import css from "./index.module.css";
@@ -19,6 +20,10 @@ export default function RootLayout({
         <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+        <div className={"fixed top-3 left-3 z-50"}>
+            <PageTracker/>
+            <MagicBackButton variant={"ghost"} className={"w-5 h-5 text-white"}/>
+        </div>
         <RootProvider>
             <div className={css.main}>
                 <PageTracker/>
