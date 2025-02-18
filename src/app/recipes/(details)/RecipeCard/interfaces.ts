@@ -1,5 +1,5 @@
-import { IRecipes } from "@/common/interfaces/recipe.interfaces.ts";
+import { IRecipe } from "@/common/interfaces/recipe.interfaces.ts";
 
 export type IProps = {
-  item: IRecipes;
+  item: IRecipe;
 };

@@ -22,6 +22,7 @@ export async function middleware(req: NextRequestWithAuth) {
         return response;
     }
 
+
     try {
         const accessToken = await getCookie('accessToken', { req });
 
@@ -29,6 +30,7 @@ export async function middleware(req: NextRequestWithAuth) {
             console.log('Redirecting to /api/auth due to missing access token.');
             return NextResponse.redirect(new URL('/api/auth', req.url));
         }
+
 
         if (req.url.startsWith('/api/') && !req.url.includes('/api/auth')) {
             const url = new URL(req.url, 'http://localhost:3000');
