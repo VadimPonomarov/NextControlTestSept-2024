@@ -1,10 +1,9 @@
 import {Metadata} from "next";
 import {IRecipe, IRecipesResponse} from "@/common/interfaces/recipe.interfaces.ts";
-import RecipesClient from "@/app/recipes/RecipesClient.tsx";
 import {fetchRecipesByTag} from "@/app/api/recipes/helpers.ts";
+import {RecipeCard} from "@/app/recipes/(details)/RecipeCard/RecipeCard.tsx";
 
 import styles from "./index.module.css";
-import {RecipeCard} from "@/app/recipes/(details)/RecipeCard/RecipeCard.tsx";
 
 interface IProps {
     params: Promise<{ slot: string }>
