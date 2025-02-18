@@ -7,11 +7,10 @@ import {fetchUsers} from "@/app/api/users/helpers.ts";
 import styles from "./index.module.css";
 
 const UsersPage: FC = async () => {
-    const response = await fetchUsers() as unknown as IUsersResponse | Error;
+    const response = await fetchUsers() as unknown as IUsersResponse;
 
     return (
         <div className={styles.absoluteContainer}>
-            <div className="w-screen flex items-center justify-center"></div>
             <UsersClient initialData={response}/>
         </div>
     );

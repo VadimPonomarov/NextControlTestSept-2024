@@ -1,15 +1,15 @@
 "use client";
-import {useEffect, useState} from "react";
-import {useSearchParams} from "next/navigation";
-import {useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
-import {signOut} from "next-auth/react";
-import {IUser, IUsersResponse} from "@/common/interfaces/users.interfaces.ts";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { signOut } from "next-auth/react";
+import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
 
 interface IProps {
     initialData: IUsersResponse;
 }
 
-export const useUsersPagination = ({initialData}: IProps) => {
+export const useUsersPagination = ({ initialData }: IProps) => {
     const searchParams = useSearchParams();
     const queryClient = useQueryClient();
     const limit = Number(searchParams.get("limit")) || 10;
@@ -19,7 +19,7 @@ export const useUsersPagination = ({initialData}: IProps) => {
 
     useEffect(() => {
         if (initialData instanceof Error) {
-            signOut({callbackUrl: "/api/auth"});
+            signOut({ callbackUrl: "/api/auth" });
         }
     }, [initialData]);
 
@@ -34,25 +34,26 @@ export const useUsersPagination = ({initialData}: IProps) => {
         queryFn: async ({ pageParam = skip }) =>
             await fetch(`/api/users?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
         getNextPageParam: (lastPage, allPages) => {
-            const newSkip = allPages.reduce((acc, page) => acc + page.users.length, skip);
+            const newSkip = allPages.reduce((acc, page) => acc + (page?.users?.length || 0), skip);
             return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
-        initialData: initialData instanceof Error ? undefined : {pages: [initialData], pageParams: [skip]},
+        initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
         staleTime: 0,
     });
 
     useEffect(() => {
         const allUsers = data?.pages.flatMap((page) => page.users) || [];
-        const uniqueUsers = Array.from(new Set(allUsers.map(user => user.id))).map(id => {
-            return allUsers.find(user => user.id === id);
-        });
-        setUniqueUsers(uniqueUsers);
+        const validUsers = allUsers.filter(user => user && user.id);
+        const uniqueUsers = Array.from(new Set(validUsers.map(user => String(user.id)))).map(id => {
+            return validUsers.find(user => String(user.id) === id);
+        }).filter(user => user !== undefined);
+        setUniqueUsers(uniqueUsers as IUser[]);
     }, [data]);
 
     useEffect(() => {
         if (skip === 0) {
-            queryClient.invalidateQueries({queryKey: ["users"]});
+            queryClient.invalidateQueries({ queryKey: ["users"] });
         }
     }, [skip, queryClient]);
 

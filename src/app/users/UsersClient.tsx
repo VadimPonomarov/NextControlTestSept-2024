@@ -8,7 +8,7 @@ import { PaginationComponent } from "@/components/All/PaginationComponent/Pagina
 import { useUsersPagination } from "./useUsersPagination.ts";
 
 interface IProps {
-    initialData: IUsersResponse | Error;
+    initialData: IUsersResponse;
 }
 
 const UsersClient: FC<IProps> = ({ initialData }) => {
@@ -28,7 +28,9 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
 
     return (
         <>
-            <PaginationComponent total={total} baseUrl={baseUrl} />
+            <div className={"fixed top-[60px] z-50"}>
+                <PaginationComponent total={total} baseUrl={baseUrl}/>
+            </div>
             <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={handleNextPage}>
                 {uniqueUsers.map((user: IUser) => (
                     <div key={user.id}>

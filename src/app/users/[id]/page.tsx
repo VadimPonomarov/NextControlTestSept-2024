@@ -15,14 +15,14 @@ const UserDetails = async ({params}: IProps) => {
     const {id} = await params
     const user = await fetchUserById(id) as unknown as IUserResponse
     const response = await fetchRecipes({limit:"0"}) as unknown as IRecipesResponse;
-    const filtered = response.recipes.filter(item => item.id === Number(id))
+    const filtered = response.recipes.filter(item => item.userId === Number(id))
     if (user instanceof Error) return null
     return (
         <div className={"flex flex-row h-screen w-screen"}>
-            <div className={"w-1/2 flex justify-center items-center"}>
+            <div className={"w-[360px] flex justify-center items-center"}>
                 <UserDetailsComponent user={user}/>
             </div>
-            <div className={"w-1/2 flex flex-wrap gap-4 justify-start "}>
+            <div className={"flex flex-wrap gap justify-start align-top gap-2 p-4 overflow-auto"}>
                 {filtered.map((recipe: IRecipe) => (
                     <div key={recipe.id}>
                         <RecipeCard item={recipe}/>
