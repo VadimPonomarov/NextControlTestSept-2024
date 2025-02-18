@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces";
+import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces.ts";
 
 interface IProps {
     initialData: IRecipesResponse | Error;

@@ -1,9 +1,10 @@
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from "@/components/ui/card.tsx";
-import styles from "./index.module.css";
 import {ResizableWrapper} from "@/components/All/ResizableWrapper/ResizableWrapper.tsx";
 import Link from "next/link";
 import {IRecipe} from "@/common/interfaces/recipe.interfaces.ts";
 import {FC} from "react";
+
+import styles from "./index.module.css";
 
 
 interface IProps {
@@ -31,7 +32,7 @@ const RecipeDetailsComponent: FC<IProps> = async (props) => {
                             <p className={styles.textSmall}>Views: {item.instructions}</p>
                         </CardFooter>
                         <Link
-                            href={`/users/${item.userId}`}
+                            href={`/src/app/(private)/users/${item.userId}`}
                             className={"text-blue-500 hover:text-blue-700 underline ml-5"}
                         >
                             Author

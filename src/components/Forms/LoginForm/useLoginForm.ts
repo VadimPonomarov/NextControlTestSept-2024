@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { IDummyAuth } from "@/common/interfaces/dummy.interfaces.ts";
 import { FormFieldsConfig } from "@/common/interfaces/forms.interfaces.ts";
+
 import { schema } from "./index.joi";
 
 export const formFields: FormFieldsConfig<IDummyAuth> = [

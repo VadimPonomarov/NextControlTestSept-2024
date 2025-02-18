@@ -3,7 +3,7 @@ import { FC } from "react";
 import InfiniteScroll from "@/components/All/InfiniteScroll/InfiniteScroll.tsx";
 import { PaginationComponent } from "@/components/All/PaginationComponent/PaginationComponent.tsx";
 import {IRecipe, IRecipesResponse} from "@/common/interfaces/recipe.interfaces.ts";
-import {RecipeCard} from "@/app/recipes/(details)/RecipeCard/RecipeCard.tsx";
+import {RecipeCard} from "@/app/(private)/recipes/(details)/RecipeCard/RecipeCard.tsx";
 
 import { useRecipesPagination } from "./useRecipesPagination.ts";
 

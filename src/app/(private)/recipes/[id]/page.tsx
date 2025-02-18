@@ -1,6 +1,6 @@
 import React from 'react';
 import {fetchRecipeById} from "@/app/api/recipes/helpers.ts";
-import RecipeDetailsComponent from "@/app/recipes/(details)/RecipeDetailsComponent/RecipeDetailsComponent.tsx";
+import RecipeDetailsComponent from "@/app/(private)/recipes/(details)/RecipeDetailsComponent/RecipeDetailsComponent.tsx";
 
 interface IProps {
     params: Promise<{ id: string }>

@@ -5,7 +5,8 @@ import FormFieldsRenderer from "@/components/All/FormFieldsRenderer/FormFieldsRe
 import { Button } from "@/components/ui/button";
 import ButtonGroup from "@/components/All/ButtonGroup/ButtonGroup.tsx";
 import { ArrowPathIcon, PaperAirplaneIcon } from "@heroicons/react/16/solid";
-import UsersComboBox from "@/app/users/(details)/UsersComboBox/UsersComboBox.tsx";
+import UsersComboBox from "@/app/(private)/users/(details)/UsersComboBox/UsersComboBox.tsx";
+
 import { useLoginForm, formFields } from "./useLoginForm";
 
 const LoginForm: FC = () => {

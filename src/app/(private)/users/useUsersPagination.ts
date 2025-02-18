@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces";
+import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
 
 interface IProps {
     initialData: IUsersResponse;
