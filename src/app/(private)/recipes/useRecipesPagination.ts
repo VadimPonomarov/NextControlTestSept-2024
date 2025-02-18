@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces.ts";
+import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces";
 
 interface IProps {
     initialData: IRecipesResponse | Error;
@@ -31,8 +31,18 @@ export const useRecipesPagination = ({ initialData }: IProps) => {
         isFetchingNextPage,
     } = useInfiniteQuery<IRecipesResponse>({
         queryKey: ["recipes", limit, skip],
-        queryFn: async ({ pageParam = skip }) =>
-            await fetch(`/api/recipes?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
+        queryFn: async ({ pageParam = skip }) => {
+            try {
+                const response = await fetch(`/api/recipes?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`);
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return await response.json();
+            } catch (error) {
+                console.error("Error fetching recipes:", error);
+                throw new Error("Error fetching recipes");
+            }
+        },
         getNextPageParam: (lastPage, allPages) => {
             const newSkip = allPages.reduce((acc, page) => acc + (page?.recipes?.length || 0), skip);
             return newSkip < total ? newSkip : undefined;
@@ -70,5 +80,3 @@ export const useRecipesPagination = ({ initialData }: IProps) => {
         total,
     };
 };
-
-
