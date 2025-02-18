@@ -1,25 +1,18 @@
 import {FC} from "react";
+import {IUsersResponse} from "@/common/interfaces/users.interfaces.ts";
 import {Metadata} from "next";
-import {IRecipesResponse} from "@/common/interfaces/recipe.interfaces.ts";
-import RecipesClient from "@/app/recipes/RecipesClient.tsx";
-import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
+import UsersClient from "@/app/users/UsersClient.tsx";
 
 import styles from "./index.module.css";
+import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
 
-const RecipesPage: FC = async () => {
-    let response: IRecipesResponse;
-
-    try {
-        response = await fetchRecipes();
-    } catch (error) {
-        console.error('Failed to fetch recipes:', error);
-        response = {total: "0", skip: "0", limit: "0"} as IRecipesResponse;
-    }
+const UsersPage: FC = async () => {
+    const response = await fetchRecipes() as unknown as IUsersResponse | Error;
 
     return (
         <div className={styles.absoluteContainer}>
-            <div className="w-screen flex items-center justify-center"></div>
-            <RecipesClient initialData={response}/>
+            <div className="w-screen flex items-center justify-center "></div>
+            <UsersClient initialData={response}/>
         </div>
     );
 };
@@ -29,5 +22,6 @@ export const metadata: Metadata = {
     description: "...",
 };
 
-export default RecipesPage;
+export default UsersPage;
+
 

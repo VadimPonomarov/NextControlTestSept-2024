@@ -33,6 +33,10 @@ export const useRecipesPagination = ({ initialData }: IProps) => {
         queryKey: ["recipes", limit, skip],
         queryFn: async ({ pageParam = skip }) => {
             const response = await fetch(`/api/recipes?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`);
+            if (response.status === 401) {
+                console.error('Error response: Unauthorized');
+                signOut({ callbackUrl: "/api/auth" });
+            }
             const text = await response.text();
             try {
                 return JSON.parse(text);
@@ -79,3 +83,4 @@ export const useRecipesPagination = ({ initialData }: IProps) => {
         total,
     };
 };
+

@@ -1,5 +1,7 @@
-import {IRecipeResponse} from "@/common/interfaces/recipe.interfaces.ts";
-import {baseUrl, getAuthorizationHeaders} from "@/common/constants/constants.ts";
+import {NextRequest} from 'next/server';
+import {baseUrl, getAuthorizationHeaders} from "@/common/constants/constants";
+import {IUserResponse} from "@/common/interfaces/users.interfaces.ts";
+import {redirect} from "next/navigation";
 
 export async function fetchUsers(params?: Record<string, string>) {
     const urlSearchParams = new URLSearchParams(params).toString();
@@ -10,10 +12,27 @@ export async function fetchUsers(params?: Record<string, string>) {
         method: 'GET',
     });
 
-    return await response.json();
+    if (response.status === 401) {
+        console.error('Error response: Unauthorized');
+        redirect('/api/auth');
+    }
+
+    if (!response.ok) {
+        console.error('Error response:', response.statusText);
+        throw new Error('Error fetching users');
+    }
+
+    let data;
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error('Failed to parse JSON response');
+    }
+
+    return data;
 }
 
-export const fetchUserById = async (id: string): Promise<IRecipeResponse> => {
+export const fetchUserById = async (req: NextRequest, id: string): Promise<IUserResponse> => {
     const headers = await getAuthorizationHeaders();
 
     const response = await fetch(`${baseUrl}/auth/users/${id}`, {
@@ -21,5 +40,23 @@ export const fetchUserById = async (id: string): Promise<IRecipeResponse> => {
         method: 'GET',
     });
 
-    return await response.json();
+    if (response.status === 401) {
+        console.error('Error response: Unauthorized');
+        redirect('/api/auth');
+        return
+    }
+
+    if (!response.ok) {
+        console.error('Error response:', response.statusText);
+        throw new Error('Failed to fetch user');
+    }
+
+    let data;
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error('Failed to parse JSON response');
+    }
+
+    return data;
 };
