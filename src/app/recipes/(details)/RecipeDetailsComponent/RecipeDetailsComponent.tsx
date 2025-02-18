@@ -32,7 +32,7 @@ const RecipeDetailsComponent: FC<IProps> = async (props) => {
                             <p className={styles.textSmall}>Views: {item.instructions}</p>
                         </CardFooter>
                         <Link
-                            href={`/src/app/(private)/users/${item.userId}`}
+                            href={`/users/${item.userId}`}
                             className={"text-blue-500 hover:text-blue-700 underline ml-5"}
                         >
                             Author

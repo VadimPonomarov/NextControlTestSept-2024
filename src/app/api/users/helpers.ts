@@ -42,7 +42,6 @@ export const fetchUserById = async (id: string): Promise<IUserResponse> => {
     if (response.status === 401) {
         console.error('Error response: Unauthorized');
         redirect('/api/auth');
-        return
     }
 
     if (!response.ok) {

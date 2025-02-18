@@ -1,7 +1,7 @@
 import {FC} from "react";
 import {IUsersResponse} from "@/common/interfaces/users.interfaces.ts";
 import {Metadata} from "next";
-import UsersClient from "@/app/(private)/users/UsersClient.tsx";
+import UsersClient from "@/app/users/UsersClient.tsx";
 import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
 
 import styles from "./index.module.css";
