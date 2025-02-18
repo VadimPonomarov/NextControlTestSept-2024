@@ -3,19 +3,19 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces";
+import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces.ts";
 
 interface IProps {
-    initialData: IUsersResponse;
+    initialData: IRecipesResponse | Error;
 }
 
-export const useUsersPagination = ({ initialData }: IProps) => {
+export const useRecipesPagination = ({ initialData }: IProps) => {
     const searchParams = useSearchParams();
     const queryClient = useQueryClient();
     const limit = Number(searchParams.get("limit")) || 10;
     const skip = Number(searchParams.get("skip")) || 0;
     const total = initialData instanceof Error ? 0 : Number(initialData.total);
-    const [uniqueUsers, setUniqueUsers] = useState<IUser[]>([]);
+    const [uniqueRecipes, setUniqueRecipes] = useState<IRecipe[]>([]);
 
     useEffect(() => {
         if (initialData instanceof Error) {
@@ -29,12 +29,12 @@ export const useUsersPagination = ({ initialData }: IProps) => {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useInfiniteQuery<IUsersResponse, Error>({
-        queryKey: ["users", limit, skip],
+    } = useInfiniteQuery<IRecipesResponse>({
+        queryKey: ["recipes", limit, skip],
         queryFn: async ({ pageParam = skip }) =>
-            await fetch(`/api/users?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
+            await fetch(`/api/recipes?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
         getNextPageParam: (lastPage, allPages) => {
-            const newSkip = allPages.reduce((acc, page) => acc + (page?.users?.length || 0), skip);
+            const newSkip = allPages.reduce((acc, page) => acc + (page?.recipes?.length || 0), skip);
             return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
@@ -43,16 +43,17 @@ export const useUsersPagination = ({ initialData }: IProps) => {
     });
 
     useEffect(() => {
-        const allUsers = data?.pages.flatMap((page) => page.users) || [];
-        const uniqueUsers = Array.from(new Set(allUsers.map(user => user?.id))).map(id => {
-            return allUsers.find(user => user?.id === id && user?.id !== undefined);
-        }).filter(user => user !== undefined);
-        setUniqueUsers(uniqueUsers as IUser[]);
+        const allRecipes = data?.pages.flatMap((page) => page.recipes) || [];
+        const validRecipes = allRecipes.filter(recipe => recipe && recipe.id);
+        const uniqueRecipes = Array.from(new Set(validRecipes.map(recipe => recipe.id))).map(id => {
+            return validRecipes.find(recipe => recipe.id === id);
+        });
+        setUniqueRecipes(uniqueRecipes);
     }, [data]);
 
     useEffect(() => {
         if (skip === 0) {
-            queryClient.invalidateQueries({ queryKey: ["users"] });
+            queryClient.invalidateQueries({ queryKey: ["recipes"] });
         }
     }, [skip, queryClient]);
 
@@ -61,7 +62,7 @@ export const useUsersPagination = ({ initialData }: IProps) => {
     };
 
     return {
-        uniqueUsers,
+        uniqueRecipes,
         error,
         handleNextPage,
         isFetchingNextPage,
@@ -69,3 +70,5 @@ export const useUsersPagination = ({ initialData }: IProps) => {
         total,
     };
 };
+
+
