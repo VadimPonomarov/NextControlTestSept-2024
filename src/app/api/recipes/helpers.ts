@@ -38,3 +38,25 @@ export const fetchRecipeById = async (id: string): Promise<IRecipeResponse> => {
 
     return data;
 };
+
+export const fetchRecipesByTag = async (name: string): Promise<IRecipeResponse> => {
+    const headers = await getAuthorizationHeaders();
+
+    const response = await fetch(`${baseUrl}/recipes/tag/${name}`, {
+        headers,
+        method: 'GET',
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch recipe: ${response.statusText}`);
+    }
+
+    let data;
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error('Failed to parse JSON response');
+    }
+
+    return data;
+};

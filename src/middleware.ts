@@ -32,7 +32,7 @@ export async function middleware(req: NextRequestWithAuth) {
         }
 
 
-        if (req.url.startsWith('/api/') && !req.url.includes('/api/auth')) {
+        if (req.url.includes('/api/') && !req.url.includes('/api/auth')) {
             const url = new URL(req.url, 'http://localhost:3000');
             url.pathname = url.pathname.replace(/^\/api/, '');
             console.log('Original URL:', req.url);
