@@ -11,7 +11,7 @@ const UsersPage: FC = async () => {
 
     return (
         <div className={styles.absoluteContainer}>
-            <div className="w-screen flex items-center justify-center"></div>
+            <div className="w-screen flex items-center justify-center "></div>
             <UsersClient initialData={response}/>
         </div>
     );
