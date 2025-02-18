@@ -139,3 +139,6 @@
     @apply text-red-600 text-xs;
 }
 
+.container-flex {
+    @apply w-screen h-screen flex items-center justify-center h-[88vh];
+}
