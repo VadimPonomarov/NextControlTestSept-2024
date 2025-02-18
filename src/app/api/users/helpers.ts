@@ -1,4 +1,3 @@
-import {NextRequest} from 'next/server';
 import {baseUrl, getAuthorizationHeaders} from "@/common/constants/constants";
 import {IUserResponse} from "@/common/interfaces/users.interfaces.ts";
 import {redirect} from "next/navigation";
@@ -32,7 +31,7 @@ export async function fetchUsers(params?: Record<string, string>) {
     return data;
 }
 
-export const fetchUserById = async (req: NextRequest, id: string): Promise<IUserResponse> => {
+export const fetchUserById = async (id: string): Promise<IUserResponse> => {
     const headers = await getAuthorizationHeaders();
 
     const response = await fetch(`${baseUrl}/auth/users/${id}`, {
