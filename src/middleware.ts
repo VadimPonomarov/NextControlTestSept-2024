@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getCookie } from 'cookies-next';
 import withAuth, { NextRequestWithAuth } from 'next-auth/middleware';
 
@@ -9,13 +9,21 @@ async function setHeaders(res: NextResponse) {
     return res;
 }
 
+async function handleResponse(response: Response, req: NextRequest) {
+    if (response.status === 401) {
+        console.log('401 Unauthorized, redirecting to /api/auth');
+        return NextResponse.redirect(new URL('/api/auth', req.url));
+    }
+    return response;
+}
+
 export async function middleware(req: NextRequestWithAuth) {
     console.log('Middleware start for URL:', req.url);
 
     if (req.url.includes('/api/')) {
         const referrer = req.headers.get('referer');
-        if (!referrer || !referrer.includes('/api/')) {
-            console.log('Direct access to API is blocked. Redirecting to /error.');
+        if (!referrer || referrer === req.url) {
+            console.log('Direct access to API from the address bar is blocked. Redirecting to /error.');
             return NextResponse.redirect(new URL('/error', req.url));
         }
     }
@@ -39,8 +47,17 @@ export async function middleware(req: NextRequestWithAuth) {
             console.log('Original URL:', req.url);
             console.log('Rewritten URL:', url.toString());
 
-            const res = NextResponse.rewrite(url.toString());
-            return await setHeaders(res);
+            // Выполнение запроса к переписанному URL
+            const fetchResponse = await fetch(url.toString(), {
+                headers: {
+                    ...req.headers,
+                    'Content-Type': 'application/json',
+                },
+                method: req.method,
+            });
+
+            const handledResponse = await handleResponse(fetchResponse, req);
+            return handledResponse instanceof NextResponse ? handledResponse : NextResponse.rewrite(url.toString());
         }
 
         const res = NextResponse.next();
@@ -61,4 +78,3 @@ export const config = {
         '/users/:path*'
     ],
 };
-

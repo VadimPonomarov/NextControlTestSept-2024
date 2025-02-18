@@ -7,7 +7,14 @@ import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
 import styles from "./index.module.css";
 
 const RecipesPage: FC = async () => {
-    const response = await fetchRecipes() as unknown as IRecipesResponse;
+    let response: IRecipesResponse;
+
+    try {
+        response = await fetchRecipes();
+    } catch (error) {
+        console.error('Failed to fetch recipes:', error);
+        response = {total: "0", skip: "0", limit: "0"} as IRecipesResponse;
+    }
 
     return (
         <div className={styles.absoluteContainer}>
@@ -23,3 +30,4 @@ export const metadata: Metadata = {
 };
 
 export default RecipesPage;
+
