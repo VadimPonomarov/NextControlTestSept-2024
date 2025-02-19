@@ -6,7 +6,6 @@ const useUniversalFilter = <T>({
                                    cb,
                                }: IProps<T>) => {
     const [inputValues, setInputValues] = useState<{ [key in keyof T]?: string }>({});
-    useQueryClient();
     useEffect(() => {
         if (cb) {
             cb(inputValues);
