@@ -1,5 +1,6 @@
 import { IRecipeResponse } from "@/common/interfaces/recipe.interfaces.ts";
 import { baseUrl, getAuthorizationHeaders } from "@/common/constants/constants.ts";
+import {redirect} from "next/navigation";
 
 export async function fetchRecipes(params?: Record<string, string>) {
     const urlSearchParams = new URLSearchParams(params).toString();
@@ -11,7 +12,8 @@ export async function fetchRecipes(params?: Record<string, string>) {
     });
 
     if (!response.ok) {
-        throw new Error('Error fetching recipes');
+        console.log('Error fetching recipes');
+        redirect('/api/auth')
     }
 
     return await response.json();
@@ -26,7 +28,8 @@ export const fetchRecipeById = async (id: string): Promise<IRecipeResponse> => {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch recipe: ${response.statusText}`);
+        console.log('Error fetching recipes');
+        redirect('/api/auth')
     }
 
     let data;
@@ -48,7 +51,8 @@ export const fetchRecipesByTag = async (name: string): Promise<IRecipeResponse> 
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch recipe: ${response.statusText}`);
+        console.log('Error fetching recipe');
+        redirect('/api/auth')
     }
 
     let data;
