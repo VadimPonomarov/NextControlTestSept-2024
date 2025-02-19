@@ -12,6 +12,7 @@ async function setHeaders(res: NextResponse) {
 export async function middleware(req: NextRequestWithAuth) {
     console.log('Middleware start for URL:', req.url);
 
+    // Блокируем прямой доступ к /api из адресной строки браузера
     if (req.url.includes('/api/') && (!req.headers.get('referer') || req.headers.get('referer') === req.url)) {
         console.log('Direct access to API from the address bar is blocked. Redirecting to /error.');
         return NextResponse.redirect(new URL('/error', req.url));
@@ -22,24 +23,12 @@ export async function middleware(req: NextRequestWithAuth) {
         return response;
     }
 
-
     try {
         const accessToken = await getCookie('accessToken', { req });
 
         if (!accessToken && !req.url.includes('/api/auth')) {
             console.log('Redirecting to /api/auth due to missing access token.');
             return NextResponse.redirect(new URL('/api/auth', req.url));
-        }
-
-
-        if (req.url.includes('/api/') && !req.url.includes('/api/auth')) {
-            const url = new URL(req.url, 'http://localhost:3000');
-            url.pathname = url.pathname.replace(/^\/api/, '');
-            console.log('Original URL:', req.url);
-            console.log('Rewritten URL:', url.toString());
-
-            const res = NextResponse.rewrite(url.toString());
-            return await setHeaders(res);
         }
 
         const res = NextResponse.next();
@@ -60,3 +49,4 @@ export const config = {
         '/users/:path*'
     ],
 };
+
