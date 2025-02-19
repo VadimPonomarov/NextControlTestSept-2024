@@ -25,15 +25,16 @@ export default function RootLayout({
             <MagicBackButton variant={"ghost"} className={"w-5 h-5 text-white"}/>
         </div>
         <RootProvider>
-            <div className={css.main}>
-                <PageTracker/>
-                <MenuMain/>
-                <span className={"fixed right-[50px] top-2 z-50"}>
+                <div className={css.main}>
+                    <PageTracker/>
+                    <MenuMain/>
+                    <span className={"fixed right-[50px] top-2 z-50"}>
                     <AuthBadge/>
                 </span>
-                <ThemeToggle/>
-                {children}
-            </div>
+                    <ThemeToggle/>
+                    {children}
+                </div>
+
         </RootProvider>
         </body>
         </html>

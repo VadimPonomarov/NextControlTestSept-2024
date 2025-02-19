@@ -32,6 +32,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "cookies-next": "^5.1.0",
+    "framer-motion": "^12.4.5",
     "heroicons": "^2.2.0",
     "joi": "^17.13.3",
     "lucide-react": "^0.474.0",
