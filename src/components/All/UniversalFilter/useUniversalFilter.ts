@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+
 import {IProps} from "./index.interfaces";
 
 const useUniversalFilter = <T>({

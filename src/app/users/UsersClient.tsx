@@ -1,13 +1,14 @@
 "use client";
-import { FC, useState, useEffect, useCallback } from "react";
+import { FC, useEffect } from "react";
 import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
 import { UserCard } from "@/app/users/(details)/UserCard/UserCard.tsx";
 import InfiniteScroll from "@/components/All/InfiniteScroll/InfiniteScroll.tsx";
 import { PaginationComponent } from "@/components/All/PaginationComponent/PaginationComponent.tsx";
 import UniversalFilter from "@/components/All/UniversalFilter/FilterInput.tsx";
 import DialogModal from "@/common/HOC/DialogModal/DialogModal.tsx";
-import { useUsersPagination } from "./useUsersPagination.ts";
 import { useSearchParams } from "next/navigation";
+
+import { useUsers } from "./useUsers.ts";
 
 interface IProps {
     initialData: IUsersResponse;
@@ -18,27 +19,12 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
     const searchParams = useSearchParams();
     const limit = searchParams.get("limit");
     const skip = searchParams.get("skip");
-    const { uniqueUsers, error, handleNextPage, isFetchingNextPage, hasNextPage, total } = useUsersPagination({
+    const { uniqueUsers, filteredUsers, handleNextPage, isFetchingNextPage, hasNextPage, total, filterUsers } = useUsers({
         initialData,
     });
 
-    const [filteredUsers, setFilteredUsers] = useState<IUser[]>(uniqueUsers);
-
     useEffect(() => {
-        setFilteredUsers(uniqueUsers); // Initialize filteredUsers with uniqueUsers
-    }, [uniqueUsers]);
-
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
-
-    const filterUsers = useCallback((inputValues: { [key in keyof IUser]?: string }) => {
-        const filtered = uniqueUsers.filter(user =>
-            Object.keys(inputValues).every(key =>
-                new RegExp(inputValues[key as keyof IUser] || "", "i").test(String(user[key as keyof IUser]))
-            )
-        );
-        setFilteredUsers(filtered);
+        filterUsers({}); // Ensure filteredUsers is initialized
     }, [uniqueUsers]);
 
     return (
@@ -51,6 +37,7 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
                     <UniversalFilter<IUser>
                         queryKey={["users", limit, skip]}
                         filterKeys={[
+                            "id",
                             "username",
                             "firstName",
                             "lastName",
@@ -77,11 +64,3 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
 };
 
 export default UsersClient;
-
-
-
-
-
-
-
-

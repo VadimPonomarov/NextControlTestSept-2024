@@ -3,7 +3,7 @@ import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card
 import {Button} from "@/components/ui/button.tsx";
 import {v4 as uuidv4} from "uuid";
 import ArrowButton from "@/components/All/ArrowButton/ArrowButton.tsx";
-import ClientComponent from "@/components/All/ClientComponent/ClientComponent.tsx";
+import ClientComponentWrapper from "@/components/All/ClientComponentWrapper/ClientComponentWrapper.tsx";
 import Link from "next/link";
 
 import styles from "./index.module.css";
@@ -30,7 +30,7 @@ export const RecipeCard: FC<IProps> = ({item}) => {
                         <span className={"flex gap-1 flex-wrap mt-2"}>
               {item.tags.map((tag: string) => (
                   <span key={uuidv4()}>
-                      <ClientComponent>
+                      <ClientComponentWrapper>
                       <Button
                           key={uuidv4()}
                           variant={"outline"}
@@ -40,7 +40,7 @@ export const RecipeCard: FC<IProps> = ({item}) => {
                               {tag}
                           </Link>
                       </Button>
-                  </ClientComponent>
+                  </ClientComponentWrapper>
                   </span>
               ))}
           </span>

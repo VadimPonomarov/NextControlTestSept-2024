@@ -5,7 +5,7 @@ interface IProps {
     children: ReactNode
 }
 
-const ClientComponent: FC<IProps> = ({children}) => {
+const ClientComponentWrapper: FC<IProps> = ({children}) => {
     return (
         <>
             {children}
@@ -13,4 +13,4 @@ const ClientComponent: FC<IProps> = ({children}) => {
     );
 };
 
-export default ClientComponent;
+export default ClientComponentWrapper;
