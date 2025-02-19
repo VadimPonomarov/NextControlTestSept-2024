@@ -41,7 +41,7 @@ const RecipesClient: FC<IProps> = ({ initialData }) => {
                 <PaginationComponent total={total} baseUrl={baseUrl} />
             </div>
             <div className="w-screen flex items-center justify-center">
-                <DialogModal label={"Filters"}>
+                <DialogModal>
                     <UniversalFilter<IRecipe>
                         queryKey={["recipes", limit, skip]}
                         filterKeys={[

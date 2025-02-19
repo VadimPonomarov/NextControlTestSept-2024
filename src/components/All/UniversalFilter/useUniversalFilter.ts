@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {IProps} from "./index.interfaces";
 
@@ -6,14 +6,11 @@ const useUniversalFilter = <T>({
                                    cb,
                                }: IProps<T>) => {
     const [inputValues, setInputValues] = useState<{ [key in keyof T]?: string }>({});
-
-    const memoizedCb = useCallback(cb, [cb]);
-
     useEffect(() => {
-        if (memoizedCb) {
-            memoizedCb(inputValues);
+        if (cb) {
+            cb(inputValues);
         }
-    }, [inputValues, memoizedCb]);
+    }, [inputValues]);
 
     const handleInputChange = (key: keyof T, value: string) => {
         setInputValues(prev => ({...prev, [key]: value}));
@@ -36,4 +33,3 @@ const useUniversalFilter = <T>({
 };
 
 export default useUniversalFilter;
-

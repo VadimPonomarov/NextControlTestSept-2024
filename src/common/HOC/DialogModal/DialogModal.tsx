@@ -8,31 +8,34 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { FC } from "react";
+import { FaFilter } from 'react-icons/fa'; // Import the filter icon from react-icons
 
 import styles from "./index.module.css";
 
 interface IProps {
   children?: React.ReactNode;
-  label?: string;
+  label?: React.ReactNode; // Changed type to React.ReactNode to accept JSX elements
 }
 
-const DialogModal: FC<IProps> = ({ children, label = "Open" }) => {
+const DialogModal: FC<IProps> = ({ children, label = <FaFilter /> }) => { // Use FaFilter as the default icon
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className={styles.button} variant="link">
-          {label}
-        </Button>
-      </DialogTrigger>
-      <DialogContent className={styles.dialogContent}>
-        <DialogHeader>
-          <DialogTitle>Filter</DialogTitle>
-          <DialogDescription />
-        </DialogHeader>
-        {children}
-      </DialogContent>
-    </Dialog>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button className={styles.button} variant="link">
+            {label}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className={styles.dialogContent}>
+          <DialogHeader>
+            <DialogTitle>Filter</DialogTitle>
+            <DialogDescription />
+          </DialogHeader>
+          {children}
+        </DialogContent>
+      </Dialog>
   );
 };
 
 export default DialogModal;
+
+

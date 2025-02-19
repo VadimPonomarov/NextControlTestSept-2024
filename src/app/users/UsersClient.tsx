@@ -37,7 +37,7 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
                 <PaginationComponent total={total} baseUrl={baseUrl} />
             </div>
             <div className="w-screen flex items-center justify-center">
-                <DialogModal label={"Filters"}>
+                <DialogModal>
                     <UniversalFilter<IUser>
                         queryKey={["users", limit, skip]}
                         filterKeys={[
