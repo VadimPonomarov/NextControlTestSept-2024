@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {useQueryClient} from "@tanstack/react-query";
 import {IProps} from "./index.interfaces";
 
 const useUniversalFilter = <T>({
                                    cb,
                                }: IProps<T>) => {
     const [inputValues, setInputValues] = useState<{ [key in keyof T]?: string }>({});
-    useQueryClient();
     useEffect(() => {
         if (cb) {
             cb(inputValues);
