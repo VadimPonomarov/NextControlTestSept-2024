@@ -4,7 +4,6 @@ import {fetchRecipesByTag} from "@/app/api/recipes/helpers.ts";
 import {RecipeCard} from "@/app/recipes/(details)/RecipeCard/RecipeCard.tsx";
 
 import styles from "./index.module.css";
-import {clsx} from "clsx";
 
 interface IProps {
     params: Promise<{ slot: string }>

@@ -1,5 +1,6 @@
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
+
 import styles from "./index.module.css";
 import useUniversalFilter from "./useUniversalFilter";
 import {IProps} from "./index.interfaces";
@@ -17,6 +18,7 @@ const UniversalFilter = <T, >({
             targetArrayKey,
             cb
         });
+
 
     return (
         <div className={styles.container}>
