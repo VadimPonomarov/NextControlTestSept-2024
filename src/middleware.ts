@@ -12,7 +12,7 @@ async function setHeaders(res: NextResponse) {
 export async function middleware(req: NextRequestWithAuth) {
     console.log('Middleware start for URL:', req.url);
 
-    // Блокируем прямой доступ к /api из адресной строки браузера
+    // Block direct access to /api from the browser address bar
     if (req.url.includes('/api/') && (!req.headers.get('referer') || req.headers.get('referer') === req.url)) {
         console.log('Direct access to API from the address bar is blocked. Redirecting to /error.');
         return NextResponse.redirect(new URL('/error', req.url));
@@ -26,11 +26,13 @@ export async function middleware(req: NextRequestWithAuth) {
     try {
         const accessToken = await getCookie('accessToken', { req });
 
+        // Redirect to /api/auth if access token is missing
         if (!accessToken && !req.url.includes('/api/auth')) {
             console.log('Redirecting to /api/auth due to missing access token.');
             return NextResponse.redirect(new URL('/api/auth', req.url));
         }
 
+        // Continue to the next middleware or handler
         const res = NextResponse.next();
         return await setHeaders(res);
     } catch (error) {
@@ -49,4 +51,5 @@ export const config = {
         '/users/:path*'
     ],
 };
+
 
