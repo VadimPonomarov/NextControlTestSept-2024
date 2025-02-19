@@ -11,7 +11,6 @@ const RecipesPage: FC = async () => {
 
     return (
         <div className={styles.absoluteContainer}>
-            <div className="w-screen flex items-center justify-center"></div>
             <RecipesClient initialData={response}/>
         </div>
     );
