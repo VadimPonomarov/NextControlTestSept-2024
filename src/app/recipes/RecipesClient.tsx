@@ -32,7 +32,7 @@ const RecipesClient: FC<IProps> = ({ initialData }) => {
 
     useEffect(() => {
         filterRecipes({});
-    }, [uniqueRecipes]);
+    }, [filterRecipes, uniqueRecipes]);
 
 
     return (

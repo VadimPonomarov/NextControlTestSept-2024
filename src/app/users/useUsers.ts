@@ -58,7 +58,7 @@ export const useUsers = ({ initialData }: IProps) => {
         if (skip === 0) {
             queryClient.invalidateQueries({ queryKey: ["users"] });
         }
-    }, [queryClient]);
+    }, [skip, queryClient]);
 
     const handleNextPage = () => {
         fetchNextPage();
