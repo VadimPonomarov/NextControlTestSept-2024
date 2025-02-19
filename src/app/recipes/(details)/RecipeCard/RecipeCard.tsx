@@ -14,7 +14,7 @@ export const RecipeCard: FC<IProps> = ({item}) => {
 
     return (
         <div className={"relative"}>
-            <span className={"absolute top-[50%] translate-y-[-50%] right-3"}>
+            <span className={"absolute top-[50%] translate-y-[-50%] right-5"}>
                 <ArrowButton url={`/recipes/${item.id}`}/>
             </span>
             <Card

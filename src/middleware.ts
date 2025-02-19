@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCookie } from 'cookies-next';
 import withAuth, { NextRequestWithAuth } from 'next-auth/middleware';
-import {redirect} from "next/navigation";
 
 async function setHeaders(res: NextResponse) {
     res.headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -16,7 +15,7 @@ export async function middleware(req: NextRequestWithAuth) {
     // Block direct access to /api from the browser address bar
     if (req.url.includes('/api/') && (!req.headers.get('referer') || req.headers.get('referer') === req.url)) {
         console.log('Direct access to API from the address bar is blocked. Redirecting to /error.');
-        return redirect('/error');
+        return NextResponse.redirect(new URL('/error', req.url));
     }
 
     try {
@@ -30,7 +29,7 @@ export async function middleware(req: NextRequestWithAuth) {
         // Redirect to /api/auth if access token is missing
         if (!accessToken && !req.url.includes('/api/auth')) {
             console.log('Redirecting to /api/auth due to missing access token.');
-            return redirect('/api/auth');
+            return NextResponse.redirect(new URL('/api/auth', req.url));
         }
 
         // Set headers for the next middleware or handler
@@ -38,16 +37,16 @@ export async function middleware(req: NextRequestWithAuth) {
         await setHeaders(res);
         return res;
     } catch (error) {
-        console.error('Middleware error:', error);
+        console.error('Middleware error:', (error as Error).message);
 
         // Redirect to /api/auth in case of an error (e.g., 401 Unauthorized)
-        if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+        if ((error as Error).message.includes('401') || (error as Error).message.includes('Unauthorized')) {
             console.log('Redirecting to /api/auth due to 401 Unauthorized error.');
             return NextResponse.redirect(new URL('/api/auth', req.url));
         }
 
         // Handle other errors
-        return redirect('/error');
+        return NextResponse.redirect(new URL('/error', req.url));
     }
 }
 
