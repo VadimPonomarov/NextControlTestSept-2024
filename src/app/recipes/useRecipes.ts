@@ -1,16 +1,16 @@
 "use client";
-import {useEffect, useState} from "react";
-import {useSearchParams} from "next/navigation";
-import {useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
-import {signOut} from "next-auth/react";
-import {IRecipe, IRecipesResponse} from "@/common/interfaces/recipe.interfaces.ts";
-import {filterItems} from "@/services/filters/filterServices.ts";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { signOut } from "next-auth/react";
+import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces.ts";
+import { filterItems } from "@/services/filters/filterServices.ts";
 
 interface IProps {
     initialData: IRecipesResponse | Error;
 }
 
-export const useRecipes = ({initialData}: IProps) => {
+export const useRecipes = ({ initialData }: IProps) => {
     const searchParams = useSearchParams();
     const queryClient = useQueryClient();
     const limit = Number(searchParams.get("limit")) || 10;
@@ -21,7 +21,7 @@ export const useRecipes = ({initialData}: IProps) => {
 
     useEffect(() => {
         if (initialData instanceof Error) {
-            signOut({callbackUrl: "/api/auth"});
+            signOut({ callbackUrl: "/api/auth" });
         }
     }, [initialData]);
 
@@ -32,7 +32,7 @@ export const useRecipes = ({initialData}: IProps) => {
         isFetchingNextPage,
     } = useInfiniteQuery<IRecipesResponse>({
         queryKey: ["recipes", limit, skip],
-        queryFn: async ({pageParam = skip}) =>
+        queryFn: async ({ pageParam = skip }) =>
             await fetch(`/api/recipes?${new URLSearchParams({
                 limit: String(limit),
                 skip: String(pageParam)
@@ -42,7 +42,7 @@ export const useRecipes = ({initialData}: IProps) => {
             return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
-        initialData: initialData instanceof Error ? undefined : {pages: [initialData], pageParams: [skip]},
+        initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
         staleTime: 0,
     });
 
@@ -58,7 +58,7 @@ export const useRecipes = ({initialData}: IProps) => {
 
     useEffect(() => {
         if (skip === 0) {
-            queryClient.invalidateQueries({queryKey: ["recipes", skip, limit]});
+            queryClient.invalidateQueries({ queryKey: ["recipes", skip, limit] });
         }
     }, [skip, limit, queryClient]);
 
@@ -66,14 +66,13 @@ export const useRecipes = ({initialData}: IProps) => {
         fetchNextPage();
     };
 
-    const filterRecipes = (inputValues: { [key in keyof IRecipe]?: string }) => {
-        const filtered = filterItems(uniqueRecipes, inputValues);
-        setFilteredRecipes(filtered);
-    };
+    const filterRecipes = useCallback((inputValues: { [key in keyof IRecipe]?: string }) => {
+        setFilteredRecipes(filterItems(uniqueRecipes, inputValues));
+    }, [uniqueRecipes]);
 
     return {
         uniqueRecipes,
-        filteredRecipes,
+        filteredRecipes: useMemo(() => filteredRecipes, [filteredRecipes]),
         handleNextPage,
         isFetchingNextPage,
         hasNextPage,
@@ -81,4 +80,3 @@ export const useRecipes = ({initialData}: IProps) => {
         filterRecipes,
     };
 };
-

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
@@ -51,27 +51,26 @@ export const useUsers = ({ initialData }: IProps) => {
             return validUsers.find(user => String(user.id) === id);
         }).filter(user => user !== undefined);
         setUniqueUsers(uniqueUsers as IUser[]);
-        setFilteredUsers(uniqueUsers as IUser[]); // Initialize filteredUsers with uniqueUsers
+        setFilteredUsers(uniqueUsers as IUser[]);
     }, [data]);
 
     useEffect(() => {
         if (skip === 0) {
-            queryClient.invalidateQueries({ queryKey: ["users",  skip, limit] });
+            queryClient.invalidateQueries({ queryKey: ["users"] });
         }
-    }, [skip, limit, queryClient]);
+    }, [queryClient]);
 
     const handleNextPage = () => {
         fetchNextPage();
     };
 
-    const filterUsers = (inputValues: { [key in keyof IUser]?: string }) => {
-        const filtered = filterItems(uniqueUsers, inputValues);
-        setFilteredUsers(filtered);
-    };
+    const filterUsers = useCallback((inputValues: { [key in keyof IUser]?: string }) => {
+        setFilteredUsers(filterItems(uniqueUsers, inputValues));
+    }, [uniqueUsers]);
 
     return {
         uniqueUsers,
-        filteredUsers,
+        filteredUsers: useMemo(() => filteredUsers, [filteredUsers]),
         error,
         handleNextPage,
         isFetchingNextPage,
@@ -80,3 +79,4 @@ export const useUsers = ({ initialData }: IProps) => {
         filterUsers,
     };
 };
+

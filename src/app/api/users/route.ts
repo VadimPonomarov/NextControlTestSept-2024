@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {fetchUsers} from "@/app/api/users/helpers.ts";
+import {fetchUsers} from "@/app/api/helpers.ts";
 
 
 export async function GET(req: NextRequest) {

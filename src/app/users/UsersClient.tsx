@@ -19,13 +19,17 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
     const searchParams = useSearchParams();
     const limit = searchParams.get("limit");
     const skip = searchParams.get("skip");
-    const { uniqueUsers, filteredUsers, handleNextPage, isFetchingNextPage, hasNextPage, total, filterUsers } = useUsers({
+    const { uniqueUsers, filteredUsers, handleNextPage, isFetchingNextPage, hasNextPage, total, filterUsers, error } = useUsers({
         initialData,
     });
 
     useEffect(() => {
         filterUsers({}); // Ensure filteredUsers is initialized
-    }, [uniqueUsers]);
+    }, [uniqueUsers, filterUsers]);
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
 
     return (
         <>
@@ -64,3 +68,4 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
 };
 
 export default UsersClient;
+

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { fetchRecipeById } from '@/app/api/recipes/helpers.ts';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
