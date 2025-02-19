@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import InfiniteScroll from "@/components/All/InfiniteScroll/InfiniteScroll.tsx";
 import { PaginationComponent } from "@/components/All/PaginationComponent/PaginationComponent.tsx";
 import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces.ts";
@@ -21,7 +21,6 @@ const RecipesClient: FC<IProps> = ({ initialData }) => {
     const skip = searchParams.get("skip");
 
     const {
-        uniqueRecipes,
         filteredRecipes,
         handleNextPage,
         isFetchingNextPage,
@@ -29,10 +28,6 @@ const RecipesClient: FC<IProps> = ({ initialData }) => {
         total,
         filterRecipes,
     } = useRecipes({ initialData });
-
-    useEffect(() => {
-        filterRecipes({});
-    }, [filterRecipes, uniqueRecipes]);
 
 
     return (

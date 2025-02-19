@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
 import { UserCard } from "@/app/users/(details)/UserCard/UserCard.tsx";
 import InfiniteScroll from "@/components/All/InfiniteScroll/InfiniteScroll.tsx";
@@ -19,17 +19,9 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
     const searchParams = useSearchParams();
     const limit = searchParams.get("limit");
     const skip = searchParams.get("skip");
-    const { uniqueUsers, filteredUsers, handleNextPage, isFetchingNextPage, hasNextPage, total, filterUsers, error } = useUsers({
+    const {filteredUsers, handleNextPage, isFetchingNextPage, hasNextPage, total, filterUsers} = useUsers({
         initialData,
     });
-
-    useEffect(() => {
-        filterUsers({}); // Ensure filteredUsers is initialized
-    }, [uniqueUsers, filterUsers]);
-
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
 
     return (
         <>

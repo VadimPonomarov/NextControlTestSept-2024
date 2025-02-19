@@ -4,9 +4,8 @@ import {Metadata} from "next";
 import UserDetailsComponent from "@/app/users/(details)/UserDetails/UserDetailsComponent.tsx";
 import {IRecipe, IRecipesResponse} from "@/common/interfaces/recipe.interfaces.ts";
 import {RecipeCard} from "@/app/recipes/(details)/RecipeCard/RecipeCard.tsx";
+import {fetchRecipes, fetchUserById} from "@/app/api/helpers.ts";
 
-import {fetchUserById} from "@/app/api/users/helpers.ts";
-import {fetchRecipes} from "@/app/api/recipes/helpers.ts";
 
 interface IProps {
     params: Promise<{ id: string }>
