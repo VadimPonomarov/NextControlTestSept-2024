@@ -39,7 +39,7 @@ export const useRecipesPagination = ({ initialData }: IProps) => {
         },
         initialPageParam: skip,
         initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
-        staleTime: 0,
+        staleTime: Infinity,
     });
 
     useEffect(() => {

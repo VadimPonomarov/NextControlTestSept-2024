@@ -6,5 +6,5 @@ export interface IProps<T> {
   queryKey: string[];
   filterKeys: (keyof T)[];
   targetArrayKey: string | keyof T;
-  cb?: (...args: any[]) => void;
+  cb?: (...args: object[]) => void;
 }
