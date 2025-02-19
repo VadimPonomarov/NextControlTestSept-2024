@@ -31,6 +31,7 @@ const UsersClient: FC<IProps> = ({ initialData }) => {
             <div className={"fixed top-[60px] z-50"}>
                 <PaginationComponent total={total} baseUrl={baseUrl}/>
             </div>
+
             <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={handleNextPage}>
                 {uniqueUsers.map((user: IUser) => (
                     <div key={user.id}>
