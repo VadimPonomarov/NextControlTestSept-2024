@@ -22,7 +22,7 @@ const UserDetails = async ({params}: IProps) => {
             <div className={"w-[360px] flex justify-center items-center"}>
                 <UserDetailsComponent user={user}/>
             </div>
-            <div className={"flex flex-wrap gap justify-start align-top gap-2 p-4 overflow-auto"}>
+            <div className={"flex flex-wrap gap justify-start align-top gap-2 p-8 overflow-auto"}>
                 {filtered.map((recipe: IRecipe) => (
                     <div key={recipe.id}>
                         <RecipeCard item={recipe}/>

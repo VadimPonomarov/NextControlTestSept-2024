@@ -4,6 +4,7 @@ import {fetchRecipesByTag} from "@/app/api/recipes/helpers.ts";
 import {RecipeCard} from "@/app/recipes/(details)/RecipeCard/RecipeCard.tsx";
 
 import styles from "./index.module.css";
+import {clsx} from "clsx";
 
 interface IProps {
     params: Promise<{ slot: string }>
@@ -15,12 +16,14 @@ const RecipesPage = async ({params}: IProps) => {
 
     return (
         <div className={styles.absoluteContainer}>
-            <div className="w-screen flex items-center justify-center"></div>
-            {response.recipes.map((recipe: IRecipe) => (
-                <div key={recipe.id}>
+            <div className="w-screen h-[85vh] flex flex-wrap gap-8  justify-center items-center overflow-y-auto">
+                {response.recipes.map((recipe: IRecipe) => (
+                    <span key={recipe.id}>
                     <RecipeCard item={recipe}/>
-                </div>
-            ))}
+                </span>
+                ))}
+            </div>
+
         </div>
     );
 };
