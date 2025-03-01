@@ -73,7 +73,7 @@ export const useRecipes = ({ initialData }: IProps) => {
         if (data) {
             queryClient.invalidateQueries({ queryKey: ["recipes"] });
         }
-    }, [skip, limit, queryClient]);
+    }, [data, skip, limit, queryClient]);
 
     const handleNextPage = () => {
         fetchNextPage();

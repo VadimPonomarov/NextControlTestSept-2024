@@ -14,7 +14,7 @@ export const useUsers = ({ initialData }: IProps) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const queryClient = useQueryClient();
-    const limit = Number(searchParams.get("limit")) || 30;
+    const limit = searchParams.get("limit") !== null ? Number(searchParams.get("limit")) : 30;
     const skip = Number(searchParams.get("skip")) || 0;
     const total = initialData instanceof Error ? 0 : Number(initialData.total);
     const [uniqueUsers, setUniqueUsers] = useState<IUser[]>([]);
@@ -33,7 +33,7 @@ export const useUsers = ({ initialData }: IProps) => {
         hasNextPage,
         isFetchingNextPage,
     } = useInfiniteQuery<IUsersResponse, Error>({
-        queryKey: ["users", skip, limit],
+        queryKey: ["users", limit, skip],
         queryFn: async ({ pageParam = skip }) =>
             await fetch(`/api/users?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
         getNextPageParam: (lastPage, allPages) => {
@@ -42,7 +42,7 @@ export const useUsers = ({ initialData }: IProps) => {
         },
         initialPageParam: skip,
         initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
-        staleTime: Infinity,
+        staleTime: Infinity, // Кэширование данных на неограниченное время
     });
 
     useEffect(() => {
@@ -53,13 +53,11 @@ export const useUsers = ({ initialData }: IProps) => {
         }).filter(user => user !== undefined);
         setUniqueUsers(uniqueUsers as IUser[]);
         setFilteredUsers(uniqueUsers as IUser[]);
-    }, [data, skip, limit]);
+    }, [data]);
 
     useEffect(() => {
-        if (skip === 0) {
-            queryClient.invalidateQueries({ queryKey: ["users"] });
-        }
-    }, [skip, queryClient]);
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+    }, [skip, limit, queryClient]);
 
     // Синхронизация значений пагинатора с параметрами командной строки и ререндеринг содержимого страницы при их изменении
     useEffect(() => {
@@ -68,13 +66,6 @@ export const useUsers = ({ initialData }: IProps) => {
         newParams.set("limit", String(limit));
         router.replace(`?${newParams.toString()}`);
     }, [skip, limit, searchParams, router]);
-
-    // Перезагрузка данных при изменении параметров
-    useEffect(() => {
-        if (data) {
-            queryClient.invalidateQueries({ queryKey: ["users"] });
-        }
-    }, [skip, limit, queryClient]);
 
     const handleNextPage = () => {
         fetchNextPage();
@@ -95,5 +86,3 @@ export const useUsers = ({ initialData }: IProps) => {
         filterUsers,
     };
 };
-
-

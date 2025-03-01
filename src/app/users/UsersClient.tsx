@@ -51,8 +51,8 @@ const UsersClient: FC<IProps> = ({initialData}) => {
             </div>
             <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={handleNextPage}>
                 <motion.div className={"flex flex-wrap gap-8 justify-center"}
-                            initial={{ opacity: 0, scale: 0.5 }}
-                            animate={{ opacity: 1, scale: 1 }}
+                            initial={{opacity: 0, scale: 0.5}}
+                            animate={{opacity: 1, scale: 1}}
                             transition={{
                                 duration: 0.8,
                                 delay: 0.5,
