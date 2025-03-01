@@ -1,32 +1,34 @@
 "use client";
-import { useEffect, useState } from "react";
-import { joiResolver } from "@hookform/resolvers/joi";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { signIn, useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import { IDummyAuth } from "@/common/interfaces/dummy.interfaces.ts";
-import { FormFieldsConfig } from "@/common/interfaces/forms.interfaces.ts";
-import { setCookie } from "cookies-next";
-import { IUserSession } from "@/common/interfaces/users.interfaces.ts";
+import {useEffect, useState} from "react";
+import {joiResolver} from "@hookform/resolvers/joi";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {signIn, useSession} from "next-auth/react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {IDummyAuth} from "@/common/interfaces/dummy.interfaces.ts";
+import {FormFieldsConfig} from "@/common/interfaces/forms.interfaces.ts";
+import {setCookie} from "cookies-next";
+import {IUserSession} from "@/common/interfaces/users.interfaces.ts";
 
-import { schema } from "./index.joi";
+import {schema} from "./index.joi";
 
 export const formFields: FormFieldsConfig<IDummyAuth> = [
-    { name: "username", label: "Username", type: "text" },
-    { name: "password", label: "Password", type: "password" },
-    { name: "expiresInMins", label: "Expires in Minutes", type: "number" },
+    {name: "username", label: "Username", type: "text"},
+    {name: "password", label: "Password", type: "password"},
+    {name: "expiresInMins", label: "Expires in Minutes", type: "number"},
 ];
 
 export const useLoginForm = () => {
     const [error, setError] = useState<string | null>(null);
-    const defaultValues: IDummyAuth = { username: "", password: "", expiresInMins: null };
+    const defaultValues: IDummyAuth = {username: "", password: "", expiresInMins: null};
+    const router = useRouter()
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get("callbackUrl") || "/";
-    const { data: session } = useSession();
+    const {data: session} = useSession();
+
 
     useEffect(() => {
         if (session?.user) {
-            const { accessToken } = session.user as IUserSession;
+            const {accessToken} = session.user as IUserSession;
             if (accessToken) {
                 setCookie("accessToken", accessToken, {
                     httpOnly: false,
@@ -41,7 +43,7 @@ export const useLoginForm = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isValid },
+        formState: {errors, isValid},
         reset,
     } = useForm<IDummyAuth>({
         resolver: joiResolver(schema),
@@ -59,8 +61,11 @@ export const useLoginForm = () => {
                 callbackUrl,
             });
 
-            if (result?.url) {
-                window.location.href = result.url;
+            if (result && result.url) {
+                router.push(result.url);
+            } else {
+                console.error("No redirect URL found in the result");
+                setError("No redirect URL found in the result");
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -72,6 +77,7 @@ export const useLoginForm = () => {
             }
         }
     };
+
 
     return {
         register,
