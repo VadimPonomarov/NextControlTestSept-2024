@@ -14,7 +14,7 @@ export const useUsers = ({ initialData }: IProps) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const queryClient = useQueryClient();
-    const limit = Number(searchParams.get("limit")) || 10;
+    const limit = Number(searchParams.get("limit")) || 30;
     const skip = Number(searchParams.get("skip")) || 0;
     const total = initialData instanceof Error ? 0 : Number(initialData.total);
     const [uniqueUsers, setUniqueUsers] = useState<IUser[]>([]);
@@ -42,7 +42,7 @@ export const useUsers = ({ initialData }: IProps) => {
         },
         initialPageParam: skip,
         initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
-        staleTime: 0,
+        staleTime: Infinity,
     });
 
     useEffect(() => {

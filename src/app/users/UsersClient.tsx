@@ -58,7 +58,7 @@ const UsersClient: FC<IProps> = ({initialData}) => {
                                 delay: 0.5,
                                 ease: [0, 0.71, 0.2, 1.01],
                             }}>
-                    {filteredUsers.map((user: IUser) => (
+                    {filteredUsers.sort((a, b) => a.id > b.id ? 1 : -1).map((user: IUser) => (
                         <div key={user.id}>
                             <UserCard item={user}/>
                         </div>

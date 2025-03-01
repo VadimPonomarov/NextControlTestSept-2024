@@ -58,7 +58,7 @@ const RecipesClient: FC<IProps> = ({initialData}) => {
                 </DialogModal>
             </div>
             <InfiniteScroll isLoading={isFetchingNextPage} hasMore={!!hasNextPage} next={handleNextPage}>
-                {filteredRecipes.map((recipe: IRecipe) => (
+                {filteredRecipes.sort((a, b) => a.id > b.id ? 1 : -1).map((recipe: IRecipe) => (
                     <motion.div
                         key={recipe.id}
                         initial={{opacity: 0, scale: 0.5}}
