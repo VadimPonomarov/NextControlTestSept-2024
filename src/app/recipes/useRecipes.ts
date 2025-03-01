@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces.ts";
-import { filterItems } from "@/services/filters/filterServices.ts";
+import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces";
+import { filterItems } from "@/services/filters/filterServices";
 
 interface IProps {
     initialData: IRecipesResponse | Error;
@@ -12,6 +12,7 @@ interface IProps {
 
 export const useRecipes = ({ initialData }: IProps) => {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const queryClient = useQueryClient();
     const limit = Number(searchParams.get("limit")) || 10;
     const skip = Number(searchParams.get("skip")) || 0;
@@ -31,14 +32,11 @@ export const useRecipes = ({ initialData }: IProps) => {
         hasNextPage,
         isFetchingNextPage,
     } = useInfiniteQuery<IRecipesResponse>({
-        queryKey: ["recipes", limit, skip],
+        queryKey: ["recipes", skip, limit],
         queryFn: async ({ pageParam = skip }) =>
-            await fetch(`/api/recipes?${new URLSearchParams({
-                limit: String(limit),
-                skip: String(pageParam)
-            })}`).then(res => res.json()),
+            await fetch(`/api/recipes?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
         getNextPageParam: (lastPage, allPages) => {
-            const newSkip = allPages.reduce((acc, page) => acc + (page?.recipes?.length || 0), skip);
+            const newSkip = allPages.reduce((acc, page) => acc + (page?.recipes?.length || 0), 0);
             return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
@@ -53,12 +51,27 @@ export const useRecipes = ({ initialData }: IProps) => {
             return validRecipes.find(recipe => recipe.id === id);
         });
         setUniqueRecipes(uniqueRecipes);
-        setFilteredRecipes(uniqueRecipes); // Initialize filteredRecipes with uniqueRecipes
-    }, [data]);
+        setFilteredRecipes(uniqueRecipes);
+    }, [data, skip, limit]);
 
     useEffect(() => {
         if (skip === 0) {
-            queryClient.invalidateQueries({ queryKey: ["recipes", skip, limit] });
+            queryClient.invalidateQueries({ queryKey: ["recipes"] });
+        }
+    }, [skip, limit, queryClient]);
+
+    // Синхронизация значений пагинатора с параметрами командной строки и ререндеринг содержимого страницы при их изменении
+    useEffect(() => {
+        const newParams = new URLSearchParams(searchParams.toString());
+        newParams.set("skip", String(skip));
+        newParams.set("limit", String(limit));
+        router.replace(`?${newParams.toString()}`);
+    }, [skip, limit, searchParams, router]);
+
+    // Перезагрузка данных при изменении параметров
+    useEffect(() => {
+        if (data) {
+            queryClient.invalidateQueries({ queryKey: ["recipes"] });
         }
     }, [skip, limit, queryClient]);
 

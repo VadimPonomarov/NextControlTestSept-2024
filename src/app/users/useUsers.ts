@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces.ts";
-import { filterItems } from "@/services/filters/filterServices.ts";
+import { IUser, IUsersResponse } from "@/common/interfaces/users.interfaces";
+import { filterItems } from "@/services/filters/filterServices";
 
 interface IProps {
     initialData: IUsersResponse;
@@ -12,6 +12,7 @@ interface IProps {
 
 export const useUsers = ({ initialData }: IProps) => {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const queryClient = useQueryClient();
     const limit = Number(searchParams.get("limit")) || 10;
     const skip = Number(searchParams.get("skip")) || 0;
@@ -32,11 +33,11 @@ export const useUsers = ({ initialData }: IProps) => {
         hasNextPage,
         isFetchingNextPage,
     } = useInfiniteQuery<IUsersResponse, Error>({
-        queryKey: ["users", limit, skip],
+        queryKey: ["users", skip, limit],
         queryFn: async ({ pageParam = skip }) =>
             await fetch(`/api/users?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
         getNextPageParam: (lastPage, allPages) => {
-            const newSkip = allPages.reduce((acc, page) => acc + (page?.users?.length || 0), skip);
+            const newSkip = allPages.reduce((acc, page) => acc + (page?.users?.length || 0), 0);
             return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
@@ -52,13 +53,28 @@ export const useUsers = ({ initialData }: IProps) => {
         }).filter(user => user !== undefined);
         setUniqueUsers(uniqueUsers as IUser[]);
         setFilteredUsers(uniqueUsers as IUser[]);
-    }, [data]);
+    }, [data, skip, limit]);
 
     useEffect(() => {
         if (skip === 0) {
             queryClient.invalidateQueries({ queryKey: ["users"] });
         }
     }, [skip, queryClient]);
+
+    // Синхронизация значений пагинатора с параметрами командной строки и ререндеринг содержимого страницы при их изменении
+    useEffect(() => {
+        const newParams = new URLSearchParams(searchParams.toString());
+        newParams.set("skip", String(skip));
+        newParams.set("limit", String(limit));
+        router.replace(`?${newParams.toString()}`);
+    }, [skip, limit, searchParams, router]);
+
+    // Перезагрузка данных при изменении параметров
+    useEffect(() => {
+        if (data) {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+        }
+    }, [skip, limit, queryClient]);
 
     const handleNextPage = () => {
         fetchNextPage();
@@ -79,4 +95,5 @@ export const useUsers = ({ initialData }: IProps) => {
         filterUsers,
     };
 };
+
 
