@@ -7,9 +7,9 @@ import {RecipeCard} from "@/app/recipes/(details)/RecipeCard/RecipeCard.tsx";
 import DialogModal from "@/components/All/DialogModal/DialogModal.tsx";
 import UniversalFilter from "@/components/All/UniversalFilter/FilterInput.tsx";
 import {useSearchParams} from "next/navigation";
+import { motion } from "framer-motion";
 
 import {useRecipes} from "./useRecipes.ts";
-import { motion } from "framer-motion";
 
 interface IProps {
     initialData: IRecipesResponse | Error;

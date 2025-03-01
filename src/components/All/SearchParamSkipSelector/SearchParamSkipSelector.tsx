@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import {useSearchParams, useRouter, usePathname} from "next/navigation";
 import { Input } from "@/components/ui/input.tsx";
 
 const SearchParamSkipSelector = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [inputValue, setInputValue] = useState(searchParams.get("skip") || "0");
+  const pathName = usePathname()
 
   const handleSkipChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("skip", value);
-    router.replace(`/users?${newParams.toString()}`);
+    router.replace(`${pathName}?${newParams.toString()}`);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +23,7 @@ const SearchParamSkipSelector = () => {
     setInputValue("0");
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("skip", "0");
-    router.replace(`/users?${newParams.toString()}`);
+    router.replace(`${pathName}?${newParams.toString()}`);
   };
 
   useEffect(() => {

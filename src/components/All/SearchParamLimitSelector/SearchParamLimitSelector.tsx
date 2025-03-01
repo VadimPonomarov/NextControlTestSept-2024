@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import {useSearchParams, useRouter, usePathname} from "next/navigation";
 
 const SearchParamLimitSelector = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [inputValue, setInputValue] = useState(searchParams.get("limit") || "30");
+  const pathName = usePathname()
 
   const handleLimitChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("limit", value);
-    router.replace(`/users?${newParams.toString()}`);
+    router.replace(`${pathName}?${newParams.toString()}`);
   };
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -21,7 +22,7 @@ const SearchParamLimitSelector = () => {
     setInputValue("30");
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("limit", "30");
-    router.replace(`/users?${newParams.toString()}`);
+    router.replace(`${pathName}?${newParams.toString()}`);
   };
 
   useEffect(() => {
