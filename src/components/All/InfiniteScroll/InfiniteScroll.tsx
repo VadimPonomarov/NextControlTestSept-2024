@@ -1,3 +1,4 @@
+"use client"
 import React, { useRef, useCallback, useMemo, ReactNode, FC } from 'react';
 
 interface InfiniteScrollProps {
