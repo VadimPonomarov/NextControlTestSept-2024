@@ -1,7 +1,7 @@
 "use client";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
+import {useInfiniteQuery} from "@tanstack/react-query";
 import {signOut} from "next-auth/react";
 import {IRecipe, IRecipesResponse} from "@/common/interfaces/recipe.interfaces";
 import {filterItems} from "@/services/filters/filterServices";
@@ -13,9 +13,7 @@ interface IProps {
 export const useRecipes = ({initialData}: IProps) => {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const queryClient = useQueryClient();
 
-    // Корректное извлечение параметров limit и skip
     const limit = useMemo(() => {
         const paramValue = searchParams.get("limit");
         return paramValue !== null ? Number(paramValue) : 30;
