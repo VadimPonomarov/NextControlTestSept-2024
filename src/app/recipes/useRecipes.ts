@@ -1,23 +1,31 @@
 "use client";
-import { useEffect, useState, useCallback, useMemo } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { signOut } from "next-auth/react";
-import { IRecipe, IRecipesResponse } from "@/common/interfaces/recipe.interfaces";
-import { filterItems } from "@/services/filters/filterServices";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
+import {signOut} from "next-auth/react";
+import {IRecipe, IRecipesResponse} from "@/common/interfaces/recipe.interfaces";
+import {filterItems} from "@/services/filters/filterServices";
 
 interface IProps {
     initialData: IRecipesResponse | Error;
 }
 
-export const useRecipes = ({ initialData }: IProps) => {
+export const useRecipes = ({initialData}: IProps) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const queryClient = useQueryClient();
 
-    // Установка значений по умолчанию для параметров
-    const limit = useMemo(() => Number(searchParams.get("limit")) || 30, [searchParams]);
-    const skip = useMemo(() => Number(searchParams.get("skip")) || 0, [searchParams]);
+    // Корректное извлечение параметров limit и skip
+    const limit = useMemo(() => {
+        const paramValue = searchParams.get("limit");
+        return paramValue !== null ? Number(paramValue) : 30;
+    }, [searchParams]);
+
+    const skip = useMemo(() => {
+        const paramValue = searchParams.get("skip");
+        return paramValue !== null ? Number(paramValue) : 0;
+    }, [searchParams]);
+
     const total = initialData instanceof Error ? 0 : Number(initialData.total);
 
     const [uniqueRecipes, setUniqueRecipes] = useState<IRecipe[]>([]);
@@ -25,7 +33,7 @@ export const useRecipes = ({ initialData }: IProps) => {
 
     useEffect(() => {
         if (initialData instanceof Error) {
-            signOut({ callbackUrl: "/api/auth" });
+            signOut({callbackUrl: "/api/auth"});
         }
     }, [initialData]);
 
@@ -36,28 +44,29 @@ export const useRecipes = ({ initialData }: IProps) => {
         isFetchingNextPage,
     } = useInfiniteQuery<IRecipesResponse>({
         queryKey: ["recipes", skip, limit],
-        queryFn: async ({ pageParam = skip }) =>
-            await fetch(`/api/recipes?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then((res) => res.json()),
+        queryFn: async ({pageParam = skip}) =>
+            await fetch(`/api/recipes?${new URLSearchParams({
+                limit: String(limit),
+                skip: String(pageParam)
+            })}`).then((res) => res.json()),
         getNextPageParam: (lastPage, allPages) => {
             const newSkip = allPages.reduce((acc, page) => acc + (page?.recipes?.length || 0), 0);
             return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
-        initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
+        initialData: initialData instanceof Error ? undefined : {pages: [initialData], pageParams: [skip]},
         staleTime: Infinity,
     });
 
     // Синхронизация данных с отображаемым рендером
     useEffect(() => {
         if (data) {
-            // Получаем все рецепты из данных
             const allRecipes = data.pages.flatMap((page) => page.recipes || []);
-            // Вычисляем правильный диапазон отображаемых данных
+            // Если limit=0, берем все элементы от skip до конца
             const startIndex = skip;
-            const endIndex = skip + limit;
+            const endIndex = limit > 0 ? skip + limit : allRecipes.length;
             const visibleRecipes = allRecipes.slice(startIndex, endIndex);
 
-            // Оставляем уникальные данные
             const validRecipes = visibleRecipes.filter(recipe => recipe && recipe.id);
             const uniqueRecipes = Array.from(new Set(validRecipes.map(recipe => recipe.id)))
                 .map(id => validRecipes.find(recipe => recipe.id === id));
@@ -72,7 +81,6 @@ export const useRecipes = ({ initialData }: IProps) => {
         const currentSkip = searchParams.get("skip") || "0";
         const currentLimit = searchParams.get("limit") || "30";
 
-        // Обновляем URL только при необходимости
         if (currentSkip !== String(skip) || currentLimit !== String(limit)) {
             const newParams = new URLSearchParams(searchParams.toString());
             newParams.set("skip", String(skip));
@@ -103,3 +111,4 @@ export const useRecipes = ({ initialData }: IProps) => {
         filterRecipes,
     };
 };
+
