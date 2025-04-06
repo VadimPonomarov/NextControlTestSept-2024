@@ -14,11 +14,15 @@ export const useUsers = ({ initialData }: IProps) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const queryClient = useQueryClient();
-    const limit = searchParams.get("limit") !== null ? Number(searchParams.get("limit")) : 30;
+    const limit =
+        searchParams.get("limit") !== null
+            ? Number(searchParams.get("limit"))
+            : 30;
     const skip = Number(searchParams.get("skip")) || 0;
     const total = initialData instanceof Error ? 0 : Number(initialData.total);
     const [uniqueUsers, setUniqueUsers] = useState<IUser[]>([]);
     const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
+    const [filterParams, setFilterParams] = useState<{ [key in keyof IUser]?: string }>({});
 
     useEffect(() => {
         if (initialData instanceof Error) {
@@ -35,31 +39,48 @@ export const useUsers = ({ initialData }: IProps) => {
     } = useInfiniteQuery<IUsersResponse, Error>({
         queryKey: ["users", limit, skip],
         queryFn: async ({ pageParam = skip }) =>
-            await fetch(`/api/users?${new URLSearchParams({ limit: String(limit), skip: String(pageParam) })}`).then(res => res.json()),
+            await fetch(
+                `/api/users?${new URLSearchParams({
+                    limit: String(limit),
+                    skip: String(pageParam),
+                })}`
+            ).then((res) => res.json()),
         getNextPageParam: (lastPage, allPages) => {
-            const newSkip = allPages.reduce((acc, page) => acc + (page?.users?.length || 0), 0);
+            const newSkip = allPages.reduce(
+                (acc, page) => acc + (page?.users?.length || 0),
+                0
+            );
             return newSkip < total ? newSkip : undefined;
         },
         initialPageParam: skip,
-        initialData: initialData instanceof Error ? undefined : { pages: [initialData], pageParams: [skip] },
-        staleTime: Infinity, // Кэширование данных на неограниченное время
+        initialData:
+            initialData instanceof Error
+                ? undefined
+                : { pages: [initialData], pageParams: [skip] },
+        staleTime: Infinity,
     });
 
     useEffect(() => {
-        const allUsers = data?.pages.flatMap((page) => page.users) || [];
-        const validUsers = allUsers.filter(user => user && user.id);
-        const uniqueUsers = Array.from(new Set(validUsers.map(user => String(user.id)))).map(id => {
-            return validUsers.find(user => String(user.id) === id);
-        }).filter(user => user !== undefined);
-        setUniqueUsers(uniqueUsers as IUser[]);
-        setFilteredUsers(uniqueUsers as IUser[]);
-    }, [data]);
+        if (data) {
+            const allUsers = data.pages.flatMap((page) => page.users || []);
+            const validUsers = allUsers.filter((user) => user && user.id);
+            const uniqueUsers = Array.from(
+                new Set(validUsers.map((user) => String(user.id)))
+            )
+                .map((id) => validUsers.find((user) => String(user.id) === id))
+                .filter((user) => user !== undefined);
+
+            setUniqueUsers(uniqueUsers as IUser[]);
+            setFilteredUsers(
+                filterItems(uniqueUsers as IUser[], filterParams) // С учетом текущих фильтров
+            );
+        }
+    }, [data, filterParams]);
 
     useEffect(() => {
         queryClient.invalidateQueries({ queryKey: ["users"] });
     }, [skip, limit, queryClient]);
 
-    // Синхронизация значений пагинатора с параметрами командной строки и ререндеринг содержимого страницы при их изменении
     useEffect(() => {
         const newParams = new URLSearchParams(searchParams.toString());
         newParams.set("skip", String(skip));
@@ -67,13 +88,16 @@ export const useUsers = ({ initialData }: IProps) => {
         router.replace(`?${newParams.toString()}`);
     }, [skip, limit, searchParams, router]);
 
-    const handleNextPage = () => {
+    const handleNextPage = useCallback(() => {
         fetchNextPage();
-    };
+    }, [fetchNextPage]);
 
-    const filterUsers = useCallback((inputValues: { [key in keyof IUser]?: string }) => {
-        setFilteredUsers(filterItems(uniqueUsers, inputValues));
-    }, [uniqueUsers]);
+    const filterUsers = useCallback(
+        (inputValues: { [key in keyof IUser]?: string }) => {
+            setFilterParams(inputValues); // Обновляем параметры фильтрации
+        },
+        []
+    );
 
     return {
         uniqueUsers,
@@ -86,3 +110,4 @@ export const useUsers = ({ initialData }: IProps) => {
         filterUsers,
     };
 };
+
